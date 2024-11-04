@@ -31,6 +31,12 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "eb09c14a-d436-432a-994d-0391ba4b6ac6"
+      }
+    },
+    "owner": "fliip"
   }
 }
