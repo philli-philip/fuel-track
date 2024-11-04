@@ -1,5 +1,4 @@
 import { Stack } from "expo-router";
-import { View } from "react-native";
 // Import your global CSS file
 import "../global.css";
 

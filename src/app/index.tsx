@@ -1,6 +1,6 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TextInput } from "react-native";
 import { colors } from "../colors";
-import { Link } from "expo-router";
+import { LinkButton } from "../components/button/button";
 
 export default function Page() {
   return (
@@ -25,11 +25,13 @@ export default function Page() {
           <Text style={styles.value}>59 litre</Text>
         </View>
       </View>
-      <Link href={"./newEntry"} asChild>
-        <Pressable className="absolute bg-blue-600 active:bg-blue-700 rounded-xl px-6 py-3 right-8 bottom-32">
-          <Text className="text-white text-xl">New entry</Text>
-        </Pressable>
-      </Link>
+      <LinkButton
+        href="/newEntry"
+        className="absolute right-8 bottom-32"
+        size="md"
+      >
+        <Text>Test</Text>
+      </LinkButton>
     </View>
   );
 }
