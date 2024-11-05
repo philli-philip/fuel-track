@@ -1,11 +1,12 @@
-import { StyleSheet, Text, View, TextInput } from "react-native";
-import { colors } from "../colors";
+import { StyleSheet, Text, View } from "react-native";
 import { LinkButton } from "../components/button/button";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { supabase } from "../utils/supabase/supabase";
 import { Loading } from "../components/Dashboard/loading";
+import { ThemeContext } from "../utils/colors/colors";
 
 export default function Page() {
+  const colors = useContext(ThemeContext);
   const [isLoading, setLoading] = useState(true);
   const [totalFueled, setTotalFueled] = useState(0);
   const [totalKM, setTotalDistance] = useState(0);
@@ -13,6 +14,29 @@ export default function Page() {
   const [pricePer1, setPricePer1] = useState(0);
   const [totalCost, setTotalCost] = useState(0);
   const [averagePrice, setAveragePrice] = useState(0);
+
+  const styles = StyleSheet.create({
+    label: {
+      fontSize: 14,
+      color: colors.text.secondary,
+    },
+    group: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 4,
+      width: "50%",
+    },
+    value: {
+      fontWeight: 700,
+      fontSize: 32,
+      color: colors.text.primary,
+    },
+    row: {
+      flexDirection: "row",
+      display: "flex",
+      paddingBottom: 48,
+    },
+  });
 
   useEffect(() => {
     getData();
@@ -46,7 +70,14 @@ export default function Page() {
     return <Loading />;
   } else {
     return (
-      <View className="h-full relative flex-col w-full mx-auto my-safe px-6 py-4 ">
+      <View
+        style={{
+          flexDirection: "column",
+          flex: 1,
+          paddingHorizontal: 24,
+          paddingVertical: 16,
+        }}
+      >
         <View style={styles.row}>
           <View style={styles.group}>
             <Text style={styles.label}>Price per 100km</Text>
@@ -82,32 +113,9 @@ export default function Page() {
           className="absolute right-8 bottom-32"
           size="md"
         >
-          <Text>Test</Text>
+          <Text>New entry</Text>
         </LinkButton>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  label: {
-    fontSize: 14,
-    color: colors.text.secondary,
-  },
-  group: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 4,
-    width: "50%",
-  },
-  value: {
-    fontWeight: 700,
-    fontSize: 32,
-    color: colors.text.primary,
-  },
-  row: {
-    flexDirection: "row",
-    display: "flex",
-    paddingBottom: 48,
-  },
-});

@@ -20,14 +20,13 @@ export const LinkButton: React.FC<LinkButton> = ({
     md: "px-6 py-3",
     sm: "px-4 py-2",
   };
+  // bg-blue-600 active:bg-blue-700 rounded-xl px-6 py-3
   return (
     <Link href={href} asChild>
-      <Pressable
-        className={`bg-blue-600 active:bg-blue-700 rounded-xl px-6 py-3 ${
-          sizes[size ?? "md"]
-        } ${className}`}
-      >
-        <Text className="text-white text-xl text-center">{children}</Text>
+      <Pressable>
+        <Text style={{ color: "white", fontSize: 24, textAlign: "center" }}>
+          {children}
+        </Text>
       </Pressable>
     </Link>
   );
