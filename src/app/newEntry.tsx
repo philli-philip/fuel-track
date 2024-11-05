@@ -1,15 +1,9 @@
-import {
-  Text,
-  TextInput,
-  View,
-  StyleSheet,
-  Button,
-  Pressable,
-} from "react-native";
+import { Text, TextInput, View, StyleSheet, Pressable } from "react-native";
 import { LinkButton } from "../components/button/button";
 import { colors } from "../colors";
 import { useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { Platform } from "react-native";
 
 export default function newEntry() {
   const [price, setPrice] = useState(1.38);
@@ -27,21 +21,24 @@ export default function newEntry() {
         </View>
         <View style={styles.group}>
           <Text style={styles.label}>Date</Text>
-          <Pressable onPress={() => setOpen(true)}>
-            <Text style={styles.value}>{dateFormater.format(date)}</Text>
-          </Pressable>
-          {open && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={date}
-              mode={"date"}
-              is24Hour={true}
-              onChange={(e) => {
-                setDate(new Date(e.nativeEvent.timestamp));
-                setOpen(false);
-              }}
-            />
+          {Platform.OS !== "ios" && (
+            <Pressable onPress={() => setOpen(true)}>
+              <Text style={styles.value}>{dateFormater.format(date)}</Text>
+            </Pressable>
           )}
+          {open ||
+            (Platform.OS === "ios" && (
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={date}
+                mode={"date"}
+                is24Hour={true}
+                onChange={(e) => {
+                  setDate(new Date(e.nativeEvent.timestamp));
+                  setOpen(false);
+                }}
+              />
+            ))}
         </View>
         <View style={styles.group}>
           <Text style={styles.label}>New pedometer value</Text>

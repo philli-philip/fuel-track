@@ -1,60 +1,31 @@
-import { StyleSheet, Text, View, TextInput } from "react-native";
-import { colors } from "../colors";
-import { LinkButton } from "../components/button/button";
+import { Session } from "@supabase/supabase-js";
+import { useEffect, useState } from "react";
+import { View, Text } from "react-native";
+import { router, useRootNavigationState } from "expo-router";
+import { supabase } from "../utils/supabase/supabase";
 
 export default function Page() {
+  const [session, setSession] = useState<Session | null>(null);
+  const rootNavigationState = useRootNavigationState();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    if (rootNavigationState?.key) {
+      if (session) router.replace("/dashboard");
+      if (!session) router.replace("/login");
+    }
+  }, [rootNavigationState]);
+
   return (
-    <View className="h-full relative flex-col w-full mx-auto my-safe px-6 py-4 ">
-      <View style={styles.row}>
-        <View style={styles.group}>
-          <Text style={styles.label}>Price per 100km</Text>
-          <Text style={styles.value}>15,93 €</Text>
-        </View>
-        <View style={styles.group}>
-          <Text style={styles.label}>Price per 1km</Text>
-          <Text style={styles.value}>1,59 €</Text>
-        </View>
-      </View>
-      <View style={styles.row}>
-        <View style={styles.group}>
-          <Text style={styles.label}>km tracked</Text>
-          <Text style={styles.value}>192 km</Text>
-        </View>
-        <View style={styles.group}>
-          <Text style={styles.label}>Fuel used</Text>
-          <Text style={styles.value}>59 litre</Text>
-        </View>
-      </View>
-      <LinkButton
-        href="/newEntry"
-        className="absolute right-8 bottom-32"
-        size="md"
-      >
-        <Text>Test</Text>
-      </LinkButton>
+    <View className="flex-1 items-center justify-center">
+      <Text>Loading...</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  label: {
-    fontSize: 14,
-    color: colors.text.secondary,
-  },
-  group: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 4,
-    width: "50%",
-  },
-  value: {
-    fontWeight: 700,
-    fontSize: 32,
-    color: colors.text.primary,
-  },
-  row: {
-    flexDirection: "row",
-    display: "flex",
-    paddingBottom: 48,
-  },
-});
