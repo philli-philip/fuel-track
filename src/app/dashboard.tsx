@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Button, SafeAreaViewBase, StyleSheet, Text, View } from "react-native";
 import { LinkButton } from "../components/button/button";
 import { useContext, useEffect, useState } from "react";
 import { supabase } from "../utils/supabase/supabase";
 import { Loading } from "../components/Dashboard/loading";
 import { ThemeContext } from "../utils/colors/colors";
+import { router } from "expo-router";
 
 export default function Page() {
   const colors = useContext(ThemeContext);
@@ -36,11 +37,23 @@ export default function Page() {
       display: "flex",
       paddingBottom: 48,
     },
+    container: {
+      flexDirection: "column",
+      flex: 1,
+      paddingHorizontal: 24,
+      paddingTop: 0,
+      backgroundColor: colors.bg.default,
+    },
   });
 
   useEffect(() => {
     getData();
   });
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.replace("/login");
+  };
 
   const getData = async () => {
     const { data, error } = await supabase.from("entries").select();
@@ -70,14 +83,7 @@ export default function Page() {
     return <Loading />;
   } else {
     return (
-      <View
-        style={{
-          flexDirection: "column",
-          flex: 1,
-          paddingHorizontal: 24,
-          paddingVertical: 16,
-        }}
-      >
+      <View style={styles.container}>
         <View style={styles.row}>
           <View style={styles.group}>
             <Text style={styles.label}>Price per 100km</Text>
@@ -115,6 +121,7 @@ export default function Page() {
         >
           <Text>New entry</Text>
         </LinkButton>
+        <Button onPress={handleLogout} title="Logout" />
       </View>
     );
   }
