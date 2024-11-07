@@ -57,9 +57,19 @@ export default function Auth() {
       style={style.container}
     >
       <Pressable onPress={Keyboard.dismiss}>
-        <View>
+        <View
+          style={{
+            flexDirection: "column",
+            justifyContent: "center",
+            flex: 1,
+          }}
+        >
           <View
-            style={{ flexDirection: "column", gap: 12, alignItems: "center" }}
+            style={{
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 12,
+            }}
           >
             <Image
               source={require("@/assets/images/favicon.png")}
@@ -82,19 +92,11 @@ export default function Auth() {
               autoCapitalize={"none"}
               placeholderTextColor={colors.text.light}
             />
-            <View
-              style={{
-                flex: 1,
-                alignItems: "stretch",
-                flexDirection: "row",
-              }}
-            >
-              <Button
-                title="Sign in"
-                disabled={loading}
-                onPress={() => signInWithEmail()}
-              />
-            </View>
+            <Button
+              title="Sign in"
+              disabled={loading}
+              onPress={() => signInWithEmail()}
+            />
           </View>
         </View>
       </Pressable>
