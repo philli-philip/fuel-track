@@ -15,6 +15,7 @@ import { router } from "expo-router";
 import { supabase } from "@/src/utils/supabase/supabase";
 import { Theme, ThemeContext } from "@/src/utils/colors/colors";
 import { Button, ButtonText } from "@/src/components/button";
+import { HideKeyboard } from "../components/HideKeyboard";
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -57,58 +58,56 @@ export default function Auth() {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={style.container}
     >
-      <Pressable onPress={Keyboard.dismiss}>
+      <HideKeyboard
+        style={{
+          flexDirection: "column",
+          justifyContent: "center",
+          flex: 1,
+        }}
+      >
         <View
           style={{
             flexDirection: "column",
-            justifyContent: "center",
-            flex: 1,
+            alignItems: "center",
+            gap: 12,
           }}
         >
-          <View
-            style={{
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 12,
-            }}
+          <Image
+            source={require("@/assets/images/favicon.png")}
+            style={{ width: 72, height: 72 }}
+          />
+          <TextInput
+            onChangeText={(text) => setEmail(text)}
+            value={email}
+            placeholder="email@address.com"
+            autoCapitalize="none"
+            style={style.input}
+            placeholderTextColor={colors.text.light}
+            onSubmitEditing={() => emailField?.current?.focus()}
+            returnKeyType="next"
+          />
+          <TextInput
+            onChangeText={(text) => setPassword(text)}
+            value={password}
+            secureTextEntry={true}
+            style={style.input}
+            placeholder="Password"
+            autoCapitalize={"none"}
+            placeholderTextColor={colors.text.light}
+            onSubmitEditing={() => signInWithEmail()}
+            returnKeyType="send"
+            ref={emailField}
+          />
+          <Button
+            disabled={loading}
+            size="lg"
+            onPress={() => signInWithEmail()}
+            className="ml-auto"
           >
-            <Image
-              source={require("@/assets/images/favicon.png")}
-              style={{ width: 72, height: 72 }}
-            />
-            <TextInput
-              onChangeText={(text) => setEmail(text)}
-              value={email}
-              placeholder="email@address.com"
-              autoCapitalize="none"
-              style={style.input}
-              placeholderTextColor={colors.text.light}
-              onSubmitEditing={() => emailField?.current?.focus()}
-              returnKeyType="next"
-            />
-            <TextInput
-              onChangeText={(text) => setPassword(text)}
-              value={password}
-              secureTextEntry={true}
-              style={style.input}
-              placeholder="Password"
-              autoCapitalize={"none"}
-              placeholderTextColor={colors.text.light}
-              onSubmitEditing={() => signInWithEmail()}
-              returnKeyType="send"
-              ref={emailField}
-            />
-            <Button
-              disabled={loading}
-              size="lg"
-              onPress={() => signInWithEmail()}
-              className="ml-auto"
-            >
-              <ButtonText>Sign in</ButtonText>
-            </Button>
-          </View>
+            <ButtonText>Sign in</ButtonText>
+          </Button>
         </View>
-      </Pressable>
+      </HideKeyboard>
     </KeyboardAvoidingView>
   );
 }
