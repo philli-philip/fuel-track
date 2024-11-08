@@ -14,7 +14,7 @@ import {
 import { router } from "expo-router";
 import { supabase } from "@/src/utils/supabase/supabase";
 import { Theme, ThemeContext } from "@/src/utils/colors/colors";
-import { Button, ButtonText } from "@/components/ui/button";
+import { Button, ButtonText } from "@/src/components/button";
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive

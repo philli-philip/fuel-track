@@ -14,7 +14,7 @@ import { Theme, ThemeContext } from "../utils/colors/colors";
 import { createEntry } from "../actions/entryActions";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams } from "expo-router";
-import { Button, ButtonText } from "@/components/ui/button";
+import { Button, ButtonText } from "@/src/components/button";
 
 export default function newEntry() {
   const colors = useContext(ThemeContext);

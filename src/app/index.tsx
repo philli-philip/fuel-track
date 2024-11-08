@@ -6,7 +6,7 @@ import { Loading } from "../components/Dashboard/loading";
 import { Theme, ThemeContext } from "../utils/colors/colors";
 import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ButtonText, Button } from "@/components/ui/button";
+import { ButtonText, Button } from "@/src/components/button";
 
 export default function Page() {
   const colors = useContext(ThemeContext);

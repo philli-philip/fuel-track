@@ -1,5 +1,5 @@
 import { ThemeContext, darkColors, lightColors } from "../utils/colors/colors";
-import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
+import { GluestackUIProvider } from "@/src/utils/gluestack-ui-provider";
 import { router, Stack, useRootNavigationState } from "expo-router";
 import { useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
