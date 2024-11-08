@@ -47,7 +47,7 @@ export default function Auth() {
       Alert.alert(error.message);
     }
     if (data.session) {
-      router.replace("/dashboard");
+      router.replace("/");
     }
   }
 

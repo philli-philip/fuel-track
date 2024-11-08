@@ -1,33 +1,31 @@
-import { Href, Link } from "expo-router";
-import React from "react";
-import { Pressable, Text } from "react-native";
+import { Theme, ThemeContext } from "@/src/utils/colors/colors";
+import React, { useContext } from "react";
+import { Text, StyleSheet, TouchableOpacity, ButtonProps } from "react-native";
 
-interface LinkButton {
-  href: Href<string | object>;
-  children?: JSX.Element | string;
-  className?: string;
-  size?: "lg" | "md" | "sm";
+interface Button extends React.FC<ButtonProps> {
+  label: string;
 }
 
-export const LinkButton: React.FC<LinkButton> = ({
-  href,
-  children,
-  className,
-  size,
-}) => {
-  const sizes = {
-    lg: "px-8 py-4",
-    md: "px-6 py-3",
-    sm: "px-4 py-2",
-  };
-  // bg-blue-600 active:bg-blue-700 rounded-xl px-6 py-3
+export const MyButton = ({ label, ...props }: Button) => {
+  const colors = useContext(ThemeContext);
+  const styles = styling(colors);
+
   return (
-    <Link href={href} asChild>
-      <Pressable>
-        <Text style={{ color: "white", fontSize: 24, textAlign: "center" }}>
-          {children}
-        </Text>
-      </Pressable>
-    </Link>
+    <TouchableOpacity style={styles.btn} {...props}>
+      <Text style={{ color: colors.text.inverted }}>{label}</Text>
+    </TouchableOpacity>
   );
 };
+
+const styling = (theme: Theme) =>
+  StyleSheet.create({
+    btn: {
+      position: "absolute",
+      bottom: 48,
+      right: 16,
+      paddingHorizontal: 24,
+      paddingVertical: 16,
+      borderRadius: 12,
+      backgroundColor: theme.bg.accent,
+    },
+  });

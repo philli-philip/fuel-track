@@ -16,6 +16,7 @@ export default function Page() {
   const [pricePer1, setPricePer1] = useState(0);
   const [totalCost, setTotalCost] = useState(0);
   const [averagePrice, setAveragePrice] = useState(0);
+  const [latestPedo, setLatestPedo] = useState(0);
 
   const styles = styling(colors);
 
@@ -47,6 +48,7 @@ export default function Page() {
       setAveragePrice(totalCost / totalFueled);
       setPricePer1(totalCost / trackedDistance);
       setPricePer100((totalCost / trackedDistance) * 100);
+      setLatestPedo(lastKM);
     }
 
     setLoading(false);
@@ -92,7 +94,10 @@ export default function Page() {
             <Text style={styles.value}>{averagePrice.toFixed(2)} €/litre</Text>
           </View>
         </View>
-        <Link href="/newEntry" asChild>
+        <Link
+          href={{ pathname: "/newEntry", params: { pedo: latestPedo } }}
+          asChild
+        >
           <TouchableOpacity style={styles.btn}>
             <Text style={{ color: colors.text.inverted }}>New entry</Text>
           </TouchableOpacity>

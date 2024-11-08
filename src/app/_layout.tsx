@@ -2,7 +2,7 @@ import { ThemeContext, darkColors, lightColors } from "../utils/colors/colors";
 import { router, Stack, useRootNavigationState } from "expo-router";
 import { useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
-import { supabase } from "../utils/supabase/supabase";
+import { SessionContext, supabase } from "../utils/supabase/supabase";
 import { Session } from "@supabase/supabase-js";
 
 export default function RootLayout() {
@@ -20,25 +20,28 @@ export default function RootLayout() {
     });
 
     if (rootNavigationState?.key) {
-      if (session) router.replace("/dashboard");
+      if (session) router.replace("/");
       if (!session) router.replace("/login");
     }
   }, []);
 
   return (
-    <ThemeContext.Provider value={color === "dark" ? darkColors : lightColors}>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="dashboard" />
-        <Stack.Screen name="login" />
-        <Stack.Screen
-          name="newEntry"
-          options={{
-            headerShown: false,
-            animation: "fade_from_bottom",
-            presentation: "formSheet",
-          }}
-        />
-      </Stack>
-    </ThemeContext.Provider>
+    <SessionContext.Provider value={session}>
+      <ThemeContext.Provider
+        value={color === "dark" ? darkColors : lightColors}
+      >
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="login" />
+          <Stack.Screen
+            name="newEntry"
+            options={{
+              headerShown: false,
+              animation: "fade_from_bottom",
+              presentation: "formSheet",
+            }}
+          />
+        </Stack>
+      </ThemeContext.Provider>
+    </SessionContext.Provider>
   );
 }

@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type Session } from "@supabase/supabase-js";
 import { Database } from "./_database.types";
+import { createContext } from "react";
 
 const supabaseUrl = "https://enuzzkkzzjjmbnfqpwcq.supabase.co";
 const supabaseAnonKey =
@@ -14,3 +15,5 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     detectSessionInUrl: false,
   },
 });
+
+export const SessionContext = createContext<Session | null>(null);
