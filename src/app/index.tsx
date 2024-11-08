@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useContext, useEffect, useState } from "react";
 import { supabase } from "../utils/supabase/supabase";
@@ -6,6 +6,7 @@ import { Loading } from "../components/Dashboard/loading";
 import { Theme, ThemeContext } from "../utils/colors/colors";
 import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { ButtonText, Button } from "@/components/ui/button";
 
 export default function Page() {
   const colors = useContext(ThemeContext);
@@ -94,14 +95,17 @@ export default function Page() {
             <Text style={styles.value}>{averagePrice.toFixed(2)} €/litre</Text>
           </View>
         </View>
-        <Link
-          href={{ pathname: "/newEntry", params: { pedo: latestPedo } }}
-          asChild
+        <Button
+          variant="solid"
+          size="xl"
+          action="primary"
+          className="absolute bottom-24 right-4"
+          onPress={() =>
+            router.push({ pathname: "/newEntry", params: { pedo: latestPedo } })
+          }
         >
-          <TouchableOpacity style={styles.btn}>
-            <Text style={{ color: colors.text.inverted }}>New entry</Text>
-          </TouchableOpacity>
-        </Link>
+          <ButtonText>New entry</ButtonText>
+        </Button>
       </SafeAreaView>
     );
   }

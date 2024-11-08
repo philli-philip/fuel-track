@@ -6,7 +6,6 @@ import {
   Pressable,
   KeyboardAvoidingView,
   Keyboard,
-  Button,
 } from "react-native";
 import { useContext, useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -15,6 +14,7 @@ import { Theme, ThemeContext } from "../utils/colors/colors";
 import { createEntry } from "../actions/entryActions";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams } from "expo-router";
+import { Button, ButtonText } from "@/components/ui/button";
 
 export default function newEntry() {
   const colors = useContext(ThemeContext);
@@ -92,6 +92,7 @@ export default function newEntry() {
                     value={pedometer >= 0 ? pedometer.toString() : "0"}
                     onChangeText={(e) => setPedometer(parseInt(e))}
                     keyboardType="numeric"
+                    autoFocus
                   />
                   <Text style={styles.unit}>km</Text>
                 </View>
@@ -134,15 +135,17 @@ export default function newEntry() {
               </View>
             </View>
             <Button
-              disabled={!enabled}
+              isDisabled={!enabled}
+              size="xl"
               onPress={() =>
                 createEntry({
                   pedometer,
                   profile_id: profile_id,
                 })
               }
-              title="Create entry"
-            ></Button>
+            >
+              <ButtonText>Create entry</ButtonText>
+            </Button>
           </View>
         </Pressable>
       </KeyboardAvoidingView>

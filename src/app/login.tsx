@@ -1,9 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import {
   Alert,
   View,
   AppState,
-  Button,
   TextInput,
   KeyboardAvoidingView,
   Keyboard,
@@ -15,6 +14,7 @@ import {
 import { router } from "expo-router";
 import { supabase } from "@/src/utils/supabase/supabase";
 import { Theme, ThemeContext } from "@/src/utils/colors/colors";
+import { Button, ButtonText } from "@/components/ui/button";
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -34,6 +34,7 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const emailField = useRef<TextInput>(null);
 
   async function signInWithEmail() {
     setLoading(true);
@@ -82,6 +83,8 @@ export default function Auth() {
               autoCapitalize="none"
               style={style.input}
               placeholderTextColor={colors.text.light}
+              onSubmitEditing={() => emailField?.current?.focus()}
+              returnKeyType="next"
             />
             <TextInput
               onChangeText={(text) => setPassword(text)}
@@ -91,12 +94,18 @@ export default function Auth() {
               placeholder="Password"
               autoCapitalize={"none"}
               placeholderTextColor={colors.text.light}
+              onSubmitEditing={() => signInWithEmail()}
+              returnKeyType="send"
+              ref={emailField}
             />
             <Button
-              title="Sign in"
               disabled={loading}
+              size="lg"
               onPress={() => signInWithEmail()}
-            />
+              className="ml-auto"
+            >
+              <ButtonText>Sign in</ButtonText>
+            </Button>
           </View>
         </View>
       </Pressable>

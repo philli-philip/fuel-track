@@ -1,9 +1,12 @@
 import { ThemeContext, darkColors, lightColors } from "../utils/colors/colors";
+import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { router, Stack, useRootNavigationState } from "expo-router";
 import { useEffect, useState } from "react";
 import { useColorScheme } from "react-native";
 import { SessionContext, supabase } from "../utils/supabase/supabase";
 import { Session } from "@supabase/supabase-js";
+
+import "@/global.css";
 
 export default function RootLayout() {
   const color = useColorScheme();
@@ -26,22 +29,24 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <SessionContext.Provider value={session}>
-      <ThemeContext.Provider
-        value={color === "dark" ? darkColors : lightColors}
-      >
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="login" />
-          <Stack.Screen
-            name="newEntry"
-            options={{
-              headerShown: false,
-              animation: "fade_from_bottom",
-              presentation: "formSheet",
-            }}
-          />
-        </Stack>
-      </ThemeContext.Provider>
-    </SessionContext.Provider>
+    <GluestackUIProvider mode={color === "dark" ? "dark" : "light"}>
+      <SessionContext.Provider value={session}>
+        <ThemeContext.Provider
+          value={color === "dark" ? darkColors : lightColors}
+        >
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="login" />
+            <Stack.Screen
+              name="newEntry"
+              options={{
+                headerShown: false,
+                animation: "fade_from_bottom",
+                presentation: "formSheet",
+              }}
+            />
+          </Stack>
+        </ThemeContext.Provider>
+      </SessionContext.Provider>
+    </GluestackUIProvider>
   );
 }

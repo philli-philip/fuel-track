@@ -31,5 +31,5 @@ export async function createEntry({
   } catch (e) {
     console.log(e);
   }
-  router.replace("/");
+  router.back();
 }
