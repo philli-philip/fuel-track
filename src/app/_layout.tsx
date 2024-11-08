@@ -29,7 +29,7 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <GluestackUIProvider mode={color === "dark" ? "dark" : "light"}>
+    <GluestackUIProvider mode="system">
       <SessionContext.Provider value={session}>
         <ThemeContext.Provider
           value={color === "dark" ? darkColors : lightColors}
