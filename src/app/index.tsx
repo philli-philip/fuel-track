@@ -62,7 +62,11 @@ export default function Page() {
       <SafeAreaView style={styles.container}>
         <View style={styles.bar}>
           <TouchableOpacity onPress={handleLogout}>
-            <MaterialIcons name="logout" size={24} color="black" />
+            <MaterialIcons
+              name="logout"
+              size={24}
+              color={colors.text.secondary}
+            />
           </TouchableOpacity>
         </View>
         <View style={styles.row}>
