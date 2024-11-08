@@ -1,5 +1,6 @@
 import { router } from "expo-router";
 import { supabase } from "../utils/supabase/supabase";
+import { getProfileID } from "./userActions";
 
 export async function createEntry({
   pedometer,
@@ -26,10 +27,32 @@ export async function createEntry({
         total_cost: 30,
         fuel_litre: 303,
         fuel_price: 2,
+        car_id: 1,
       })
       .select();
   } catch (e) {
     console.log(e);
   }
   router.back();
+}
+
+export async function getDashboardData(car: number): Promise<{
+  totalCost: number;
+  averagePricePerLitre: number;
+  totalFuel: number;
+  totalKm: number;
+  pricePer100: number;
+  pricePer1: number;
+}> {
+  const user = getProfileID();
+  const { data, error } = await supabase.from("entries").select("*");
+
+  return {
+    totalCost: 54,
+    averagePricePerLitre: 1.35,
+    totalFuel: 21.3,
+    totalKm: 1244.12,
+    pricePer100: 19.44,
+    pricePer1: 1.94,
+  };
 }
