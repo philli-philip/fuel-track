@@ -85,7 +85,7 @@ export default function Page() {
             <Text style={styles.value}>{totalKM} km</Text>
           </View>
           <View style={styles.group}>
-            <Text style={styles.label}>Fuel used</Text>
+            <Text style={styles.label}>Total fuel</Text>
             <Text style={styles.value}>{totalFueled.toFixed(2)} litre</Text>
           </View>
         </View>
