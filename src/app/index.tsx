@@ -7,57 +7,56 @@ import { Theme, ThemeContext } from "../utils/colors/colors";
 import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ButtonText, Button } from "@/src/components/button";
+import { DashboardData, getDashboardData } from "../actions/entryActions";
 
 export default function Page() {
   const colors = useContext(ThemeContext);
   const [isLoading, setLoading] = useState(true);
-  const [totalFueled, setTotalFueled] = useState(0);
-  const [totalKM, setTotalDistance] = useState(0);
-  const [pricePer100, setPricePer100] = useState(0);
-  const [pricePer1, setPricePer1] = useState(0);
-  const [totalCost, setTotalCost] = useState(0);
-  const [averagePrice, setAveragePrice] = useState(0);
   const [latestPedo, setLatestPedo] = useState(0);
+  const [data, setData] = useState<DashboardData | null>(null);
 
   const styles = styling(colors);
 
   useEffect(() => {
-    getData();
-  });
+    handleGettingData();
+    getLatestPedo();
+  }, []);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     router.replace("/login");
   };
 
-  const getData = async () => {
-    const { data, error } = await supabase.from("entries").select();
+  const getLatestPedo = async () => {
+    const { data } = await supabase
+      .from("entries")
+      .select("pedometer")
+      .order("created_at")
+      .single();
+
+    console.log(data);
+    if (data) {
+      setLatestPedo(data.pedometer);
+    }
+  };
+
+  const handleGettingData = async () => {
+    const data = await getDashboardData(1);
 
     if (data) {
-      setTotalFueled(data.reduce((x, item) => x + (item.fuel_litre ?? 0), 0));
-      setTotalCost(
-        data.reduce(
-          (x, item) => x + (item.fuel_litre ?? 0) * item.fuel_price,
-          0
-        )
-      );
-      const baseKM = data[0].pedometer;
-      const lastKM = data[data.length - 1].pedometer;
-      const trackedDistance = lastKM - baseKM;
-
-      setTotalDistance(trackedDistance);
-      setAveragePrice(totalCost / totalFueled);
-      setPricePer1(totalCost / trackedDistance);
-      setPricePer100((totalCost / trackedDistance) * 100);
-      setLatestPedo(lastKM);
+      try {
+        setData(data);
+        setLoading(false);
+      } catch (e) {
+        console.log(e);
+      }
     }
-
-    setLoading(false);
   };
 
   if (isLoading) {
     return <Loading />;
-  } else {
+  }
+  if (data) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.bar}>
@@ -72,31 +71,33 @@ export default function Page() {
         <View style={styles.row}>
           <View style={styles.group}>
             <Text style={styles.label}>Price per 100km</Text>
-            <Text style={styles.value}>{pricePer100.toFixed(2)} €</Text>
+            <Text style={styles.value}>{data.pricePer100.toFixed(2)} €</Text>
           </View>
           <View style={styles.group}>
             <Text style={styles.label}>Price per 1km</Text>
-            <Text style={styles.value}>{pricePer1.toFixed(2)} €</Text>
+            <Text style={styles.value}>{data.pricePer1.toFixed(2)} €</Text>
           </View>
         </View>
         <View style={styles.row}>
           <View style={styles.group}>
             <Text style={styles.label}>km tracked</Text>
-            <Text style={styles.value}>{totalKM} km</Text>
+            <Text style={styles.value}>{data.totalKm} km</Text>
           </View>
           <View style={styles.group}>
             <Text style={styles.label}>Total fuel</Text>
-            <Text style={styles.value}>{totalFueled.toFixed(2)} litre</Text>
+            <Text style={styles.value}>{data.totalFuel.toFixed(2)} litre</Text>
           </View>
         </View>
         <View style={styles.row}>
           <View style={styles.group}>
             <Text style={styles.label}>Total spent</Text>
-            <Text style={styles.value}>{totalCost.toFixed(2)} €</Text>
+            <Text style={styles.value}>{data.totalCost.toFixed(2)} €</Text>
           </View>
           <View style={styles.group}>
             <Text style={styles.label}>Average price</Text>
-            <Text style={styles.value}>{averagePrice.toFixed(2)} €/litre</Text>
+            <Text style={styles.value}>
+              {data.averagePricePerLitre.toFixed(2)} €/litre
+            </Text>
           </View>
         </View>
         <Button
