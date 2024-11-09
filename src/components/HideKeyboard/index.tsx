@@ -14,7 +14,8 @@ export const HideKeyboard = ({
     onPress={() => Platform.OS !== "web" && Keyboard.dismiss()}
     accessible={false}
     focusable={false}
-    style={{ cursor: "auto" }}
+    className={className}
+    style={{ cursor: "auto", ...style }}
   >
     <View {...props}>{children}</View>
   </Pressable>

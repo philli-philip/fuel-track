@@ -16,6 +16,7 @@ import { supabase } from "@/src/utils/supabase/supabase";
 import { Theme, ThemeContext } from "@/src/utils/colors/colors";
 import { Button, ButtonText } from "@/src/components/button";
 import { HideKeyboard } from "../components/HideKeyboard";
+import { VStack } from "../utils/vstack";
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -54,24 +55,11 @@ export default function Auth() {
   }
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={style.container}
-    >
-      <HideKeyboard
-        style={{
-          flexDirection: "column",
-          justifyContent: "center",
-          flex: 1,
-        }}
+    <HideKeyboard style={style.container}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <View
-          style={{
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 12,
-          }}
-        >
+        <VStack space="lg" align="center">
           <Image
             source={require("@/assets/images/favicon.png")}
             style={{ width: 72, height: 72 }}
@@ -106,9 +94,9 @@ export default function Auth() {
           >
             <ButtonText>Sign in</ButtonText>
           </Button>
-        </View>
-      </HideKeyboard>
-    </KeyboardAvoidingView>
+        </VStack>
+      </KeyboardAvoidingView>
+    </HideKeyboard>
   );
 }
 
