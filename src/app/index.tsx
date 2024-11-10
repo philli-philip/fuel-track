@@ -1,13 +1,14 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useContext, useEffect, useState } from "react";
 import { supabase } from "../utils/supabase/supabase";
 import { Loading } from "../components/Dashboard/loading";
 import { Theme, ThemeContext } from "../utils/colors/colors";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ButtonText, Button } from "@/src/components/button";
 import { DashboardData, getDashboardData } from "../actions/entryActions";
+import { SummaryGrid } from "../components/Dashboard/Summary";
 
 export default function Page() {
   const colors = useContext(ThemeContext);
@@ -34,7 +35,6 @@ export default function Page() {
       .order("created_at")
       .single();
 
-    console.log(data);
     if (data) {
       setLatestPedo(data.pedometer);
     }
@@ -53,67 +53,31 @@ export default function Page() {
     }
   };
 
-  if (isLoading) {
-    return <Loading />;
-  }
-  if (data) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.bar}>
-          <TouchableOpacity onPress={handleLogout}>
-            <MaterialIcons
-              name="logout"
-              size={24}
-              color={colors.text.secondary}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.group}>
-            <Text style={styles.label}>Price per 100km</Text>
-            <Text style={styles.value}>{data.pricePer100.toFixed(2)} €</Text>
-          </View>
-          <View style={styles.group}>
-            <Text style={styles.label}>Price per 1km</Text>
-            <Text style={styles.value}>{data.pricePer1.toFixed(2)} €</Text>
-          </View>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.group}>
-            <Text style={styles.label}>km tracked</Text>
-            <Text style={styles.value}>{data.totalKm} km</Text>
-          </View>
-          <View style={styles.group}>
-            <Text style={styles.label}>Total fuel</Text>
-            <Text style={styles.value}>{data.totalFuel.toFixed(2)} litre</Text>
-          </View>
-        </View>
-        <View style={styles.row}>
-          <View style={styles.group}>
-            <Text style={styles.label}>Total spent</Text>
-            <Text style={styles.value}>{data.totalCost.toFixed(2)} €</Text>
-          </View>
-          <View style={styles.group}>
-            <Text style={styles.label}>Average price</Text>
-            <Text style={styles.value}>
-              {data.averagePricePerLitre.toFixed(2)} €/litre
-            </Text>
-          </View>
-        </View>
-        <Button
-          variant="solid"
-          size="xl"
-          action="primary"
-          className="absolute bottom-24 right-4"
-          onPress={() =>
-            router.push({ pathname: "/newEntry", params: { pedo: latestPedo } })
-          }
-        >
-          <ButtonText>New entry</ButtonText>
-        </Button>
-      </SafeAreaView>
-    );
-  }
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.bar}>
+        <TouchableOpacity onPress={handleLogout}>
+          <MaterialIcons
+            name="logout"
+            size={24}
+            color={colors.text.secondary}
+          />
+        </TouchableOpacity>
+      </View>
+      {isLoading ? <Loading /> : data && <SummaryGrid data={data} />}
+      <Button
+        variant="solid"
+        size="xl"
+        action="primary"
+        className="absolute bottom-24 right-4"
+        onPress={() =>
+          router.push({ pathname: "/newEntry", params: { pedo: latestPedo } })
+        }
+      >
+        <ButtonText>New entry</ButtonText>
+      </Button>
+    </SafeAreaView>
+  );
 }
 
 const styling = (theme: Theme) =>
@@ -132,26 +96,6 @@ const styling = (theme: Theme) =>
     },
     btnPressed: {
       opacity: 0.5,
-    },
-    label: {
-      fontSize: 14,
-      color: theme.text.secondary,
-    },
-    group: {
-      display: "flex",
-      flexDirection: "column",
-      gap: 4,
-      width: "50%",
-    },
-    value: {
-      fontWeight: 700,
-      fontSize: 32,
-      color: theme.text.primary,
-    },
-    row: {
-      flexDirection: "row",
-      display: "flex",
-      paddingBottom: 72,
     },
     container: {
       flexDirection: "column",
