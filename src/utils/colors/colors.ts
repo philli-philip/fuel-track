@@ -40,7 +40,7 @@ export const darkColors: Theme = {
     error: "#F00",
   },
   bg: {
-    default: "#111",
+    default: "#0a0a0a",
     input: "#222",
     accent: "#0E6EFE",
   },
