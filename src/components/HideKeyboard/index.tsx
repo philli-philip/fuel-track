@@ -6,7 +6,7 @@ export const HideKeyboard = ({
   style,
   ...props
 }: {
-  children?: JSX.Element;
+  children?: JSX.Element | JSX.Element[];
   className?: string;
   style?: {};
 }) => (
