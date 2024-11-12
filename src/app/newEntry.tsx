@@ -5,7 +5,7 @@ import {
   StyleSheet,
   Pressable,
   KeyboardAvoidingView,
-  Keyboard,
+  ScrollView,
 } from "react-native";
 import { useContext, useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -22,7 +22,6 @@ export default function newEntry() {
   const styles = styling(colors);
 
   const { pedo } = useLocalSearchParams<{ pedo?: string }>();
-  console.log("searchParam: ", pedo);
 
   const [fuelPrice, setPrice] = useState(1.38);
   const [open, setOpen] = useState(false);
@@ -45,31 +44,34 @@ export default function newEntry() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <HideKeyboard style={{ flex: 1 }}>
-        <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
-          <View style={{ flex: 1 }}>
-            <Text className="text-center text-xl text-gray-700 dark:text-gray-200 pb-4">
-              New entry
-            </Text>
-            <View style={styles.group}>
+    <KeyboardAvoidingView style={{ flex: 1 }} className="bg-white">
+      <ScrollView style={{ flex: 1, paddingHorizontal: 16 }}>
+        <HideKeyboard style={{ flex: 1 }}>
+          <View>
+            <View
+              style={styles.group}
+              className="flex-col flex-1 justify-start"
+            >
               <Text style={styles.label}>Date</Text>
-              {Platform.OS !== "ios" && (
+              {Platform.OS !== "ios" ? (
                 <Pressable onPress={() => setOpen(true)}>
                   <Text style={styles.value}>{dateFormater.format(date)}</Text>
                 </Pressable>
-              )}
-              {(open || Platform.OS === "ios") && (
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={date}
-                  mode={"date"}
-                  is24Hour={true}
-                  onChange={(e) => {
-                    setDate(new Date(e.nativeEvent.timestamp));
-                    setOpen(false);
-                  }}
-                />
+              ) : (
+                open && (
+                  <View className="flex-1 flex-row justify-start p-0 -mx-4">
+                    <DateTimePicker
+                      testID="dateTimePicker"
+                      value={date}
+                      mode={"date"}
+                      is24Hour={true}
+                      onChange={(e) => {
+                        setDate(new Date(e.nativeEvent.timestamp));
+                        setOpen(false);
+                      }}
+                    />
+                  </View>
+                )
               )}
             </View>
             <View style={styles.group}>
@@ -139,9 +141,9 @@ export default function newEntry() {
           >
             <ButtonText>Create entry</ButtonText>
           </Button>
-        </Pressable>
-      </HideKeyboard>
-    </SafeAreaView>
+        </HideKeyboard>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -170,7 +172,6 @@ const styling = (theme: Theme) =>
     container: {
       flexDirection: "column",
       flex: 1,
-      paddingHorizontal: 16,
       paddingVertical: 16,
       backgroundColor: theme.bg.default,
     },

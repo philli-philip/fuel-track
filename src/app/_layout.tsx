@@ -2,7 +2,7 @@ import { ThemeContext, darkColors, lightColors } from "../utils/colors/colors";
 import { GluestackUIProvider } from "@/src/utils/gluestack-ui-provider";
 import { router, Stack, useRootNavigationState } from "expo-router";
 import { useEffect, useState } from "react";
-import { useColorScheme } from "react-native";
+import { Platform, useColorScheme } from "react-native";
 import { SessionContext, supabase } from "../utils/supabase/supabase";
 import { Session } from "@supabase/supabase-js";
 
@@ -39,9 +39,11 @@ export default function RootLayout() {
             <Stack.Screen
               name="newEntry"
               options={{
-                headerShown: false,
+                headerShown: true,
                 animation: "fade_from_bottom",
                 presentation: "formSheet",
+                headerShadowVisible: false,
+                title: "New entry",
               }}
             />
           </Stack>
