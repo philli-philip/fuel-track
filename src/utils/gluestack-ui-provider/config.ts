@@ -161,7 +161,7 @@ export const config = {
     "--color-primary-200": "179 179 179",
     "--color-primary-300": "199 199 199",
     "--color-primary-400": "230 230 230",
-    "--color-primary-500": "14 110 254",
+    "--color-primary-500": "254 254 254",
     "--color-primary-600": "250 250 250",
     "--color-primary-700": "252 252 252",
     "--color-primary-800": "253 253 253",

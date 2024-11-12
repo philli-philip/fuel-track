@@ -127,6 +127,8 @@ export default function newEntry() {
             isDisabled={!enabled}
             className="mb-2"
             size="xl"
+            variant="solid"
+            action="primary"
             onPress={() =>
               createEntry({
                 pedometer,
