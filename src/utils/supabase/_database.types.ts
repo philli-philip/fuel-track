@@ -13,27 +13,22 @@ export type Database = {
         Row: {
           created_at: string
           id: number
-          profile_id: number
+          starting_pedometer: number
+          user_id: string
         }
         Insert: {
           created_at?: string
           id?: number
-          profile_id: number
+          starting_pedometer?: number
+          user_id: string
         }
         Update: {
           created_at?: string
           id?: number
-          profile_id?: number
+          starting_pedometer?: number
+          user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "cars_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "profile"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       entries: {
         Row: {
@@ -45,8 +40,8 @@ export type Database = {
           id: number
           km_added: number
           pedometer: number
-          profile_id: number
           total_cost: number
+          user_id: string | null
         }
         Insert: {
           car_id: number
@@ -57,8 +52,8 @@ export type Database = {
           id?: number
           km_added?: number
           pedometer: number
-          profile_id: number
           total_cost?: number
+          user_id?: string | null
         }
         Update: {
           car_id?: number
@@ -69,8 +64,8 @@ export type Database = {
           id?: number
           km_added?: number
           pedometer?: number
-          profile_id?: number
           total_cost?: number
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -78,13 +73,6 @@ export type Database = {
             columns: ["car_id"]
             isOneToOne: false
             referencedRelation: "cars"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "entries_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "profile"
             referencedColumns: ["id"]
           },
         ]

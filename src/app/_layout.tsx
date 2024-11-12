@@ -2,7 +2,7 @@ import { ThemeContext, darkColors, lightColors } from "../utils/colors/colors";
 import { GluestackUIProvider } from "@/src/utils/gluestack-ui-provider";
 import { router, Stack, useRootNavigationState } from "expo-router";
 import { useEffect, useState } from "react";
-import { Platform, useColorScheme } from "react-native";
+import { useColorScheme } from "react-native";
 import { SessionContext, supabase } from "../utils/supabase/supabase";
 import { Session } from "@supabase/supabase-js";
 
@@ -23,7 +23,26 @@ export default function RootLayout() {
     });
 
     if (rootNavigationState?.key) {
-      if (session) router.replace("/");
+      if (session) {
+        supabase
+          .from("profile")
+          .select("id")
+          .eq("user_id", session.user.id)
+          .limit(1)
+          .then(({ data }) => {
+            console.log(data);
+            if (data && data[0].id) {
+              supabase
+                .from("cars")
+                .select("*")
+                .eq("profile_id", data[0].id)
+                .then((cars) => {
+                  console.log("cars: ", cars);
+                });
+            }
+          });
+        router.replace("/login");
+      }
       if (!session) router.replace("/login");
     }
   }, []);

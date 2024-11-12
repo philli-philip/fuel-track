@@ -12,11 +12,11 @@ export const SummaryGrid = ({ data }: { data: DashboardData }) => {
       <View style={styles.row}>
         <View style={styles.group}>
           <Text style={styles.label}>Price per 100km</Text>
-          <Text style={styles.value}>{data.pricePer100.toFixed(2)} €</Text>
+          <Text style={styles.value}>{data.pricePer100?.toFixed(2)} €</Text>
         </View>
         <View style={styles.group}>
           <Text style={styles.label}>Price per 1km</Text>
-          <Text style={styles.value}>{data.pricePer1.toFixed(2)} €</Text>
+          <Text style={styles.value}>{data.pricePer1?.toFixed(2)} €</Text>
         </View>
       </View>
       <View style={styles.row}>
@@ -26,18 +26,18 @@ export const SummaryGrid = ({ data }: { data: DashboardData }) => {
         </View>
         <View style={styles.group}>
           <Text style={styles.label}>Total fuel</Text>
-          <Text style={styles.value}>{data.totalFuel.toFixed(2)} litre</Text>
+          <Text style={styles.value}>{data.totalFuel?.toFixed(2)} litre</Text>
         </View>
       </View>
       <View style={styles.row}>
         <View style={styles.group}>
           <Text style={styles.label}>Total spent</Text>
-          <Text style={styles.value}>{data.totalCost.toFixed(2)} €</Text>
+          <Text style={styles.value}>{data.totalCost?.toFixed(2)} €</Text>
         </View>
         <View style={styles.group}>
           <Text style={styles.label}>Average price</Text>
           <Text style={styles.value}>
-            {data.averagePricePerLitre.toFixed(2)} €/litre
+            {data.averagePricePerLitre?.toFixed(2)} €/litre
           </Text>
         </View>
       </View>

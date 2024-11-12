@@ -1,7 +1,7 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useContext, useEffect, useState } from "react";
-import { supabase } from "../utils/supabase/supabase";
+import { SessionContext, supabase } from "../utils/supabase/supabase";
 import { Loading } from "../components/Dashboard/loading";
 import { Theme, ThemeContext } from "../utils/colors/colors";
 import { router } from "expo-router";
@@ -15,10 +15,21 @@ export default function Page() {
   const [isLoading, setLoading] = useState(true);
   const [latestPedo, setLatestPedo] = useState(0);
   const [data, setData] = useState<DashboardData | null>(null);
+  const session = useContext(SessionContext);
 
   const styles = styling(colors);
 
   useEffect(() => {
+    supabase
+      .from("cars")
+      .select("*")
+      .then((cars) => {
+        console.log("cars: ", cars);
+        if (cars.data?.length === 0) {
+          router.replace("/setup");
+        }
+      });
+
     handleGettingData();
     getLatestPedo();
   }, []);
@@ -41,7 +52,8 @@ export default function Page() {
   };
 
   const handleGettingData = async () => {
-    const data = await getDashboardData(1);
+    const data = await getDashboardData();
+    console.log("dasboard: ", data);
 
     if (data) {
       try {
@@ -64,7 +76,17 @@ export default function Page() {
           />
         </TouchableOpacity>
       </View>
-      {isLoading ? <Loading /> : data && <SummaryGrid data={data} />}
+      {isLoading ? (
+        <Loading />
+      ) : data && data.pricePer1 ? (
+        <SummaryGrid data={data} />
+      ) : (
+        <View className="flex-1 flex-col justify-center align-middle pb-24">
+          <Text className="dark:text-white text-center">
+            Add your first entry to get started!
+          </Text>
+        </View>
+      )}
       <Button
         variant="solid"
         size="xl"
