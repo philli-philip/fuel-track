@@ -44,7 +44,10 @@ export default function newEntry() {
   };
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} className="bg-white">
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      className="bg-white dark:bg-black"
+    >
       <ScrollView style={{ flex: 1, paddingHorizontal: 16 }}>
         <HideKeyboard style={{ flex: 1 }}>
           <View>
