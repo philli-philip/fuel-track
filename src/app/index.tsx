@@ -1,6 +1,12 @@
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { useContext, useEffect, useState } from "react";
+import {
+  useContext,
+  useDeferredValue,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { SessionContext, supabase } from "../utils/supabase/supabase";
 import { Loading } from "../components/Dashboard/loading";
 import { Theme, ThemeContext } from "../utils/colors/colors";
@@ -9,30 +15,27 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ButtonText, Button } from "@/src/components/button";
 import { DashboardData, getDashboardData } from "../actions/entryActions";
 import { SummaryGrid } from "../components/Dashboard/Summary";
+import { getCarID } from "../actions/carActions";
 
 export default function Page() {
   const colors = useContext(ThemeContext);
   const [isLoading, setLoading] = useState(true);
   const [latestPedo, setLatestPedo] = useState(0);
   const [data, setData] = useState<DashboardData | null>(null);
-  const session = useContext(SessionContext);
+  const [car_id, setCar_id] = useState<number | null>(null);
 
   const styles = styling(colors);
 
   useEffect(() => {
-    supabase
-      .from("cars")
-      .select("*")
-      .then((cars) => {
-        console.log("cars: ", cars);
-        if (cars.data?.length === 0) {
-          router.replace("/setup");
-        }
-      });
-
     handleGettingData();
     getLatestPedo();
+    setCarID();
   }, []);
+
+  const setCarID = async () => {
+    const carID = await getCarID();
+    setCar_id(carID ?? null);
+  };
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -44,25 +47,34 @@ export default function Page() {
       .from("entries")
       .select("pedometer")
       .order("created_at")
-      .single();
+      .limit(1);
 
-    if (data) {
-      setLatestPedo(data.pedometer);
+    if (data && data.length > 0) {
+      setLatestPedo(data[0].pedometer);
+    } else {
+      setLatestPedo(0);
     }
   };
 
   const handleGettingData = async () => {
     const data = await getDashboardData();
-    console.log("dasboard: ", data);
+    console.log(data);
 
-    if (data) {
-      try {
-        setData(data);
-        setLoading(false);
-      } catch (e) {
-        console.log(e);
-      }
+    if (!data) {
+      setData({
+        totalCost: 0,
+        averagePricePerLitre: 0,
+        totalFuel: 0,
+        totalKm: 0,
+        pricePer1: 0,
+        pricePer100: 0,
+        count: 0,
+      });
+    } else {
+      setData(data);
     }
+
+    setLoading(false);
   };
 
   return (
@@ -76,24 +88,17 @@ export default function Page() {
           />
         </TouchableOpacity>
       </View>
-      {isLoading ? (
-        <Loading />
-      ) : data && data.pricePer1 ? (
-        <SummaryGrid data={data} />
-      ) : (
-        <View className="flex-1 flex-col justify-center align-middle pb-24">
-          <Text className="dark:text-white text-center">
-            Add your first entry to get started!
-          </Text>
-        </View>
-      )}
+      {isLoading ? <Loading /> : data && <SummaryGrid data={data} />}
       <Button
         variant="solid"
         size="xl"
         action="primary"
         className="absolute bottom-24 right-4"
         onPress={() =>
-          router.push({ pathname: "/newEntry", params: { pedo: latestPedo } })
+          router.push({
+            pathname: "/newEntry",
+            params: { pedo: latestPedo, carID: car_id },
+          })
         }
       >
         <ButtonText>New entry</ButtonText>

@@ -8,6 +8,7 @@ export async function createEntry({
   fuel_price,
   total_cost,
   km_added,
+  car_id,
 }: {
   pedometer: number;
   date?: string;
@@ -15,6 +16,7 @@ export async function createEntry({
   fuel_price?: number;
   total_cost?: number;
   km_added?: number;
+  car_id: number;
 }) {
   try {
     await supabase.from("entries").insert({
@@ -23,7 +25,7 @@ export async function createEntry({
       total_cost: total_cost,
       fuel_litre: fuel_litre,
       fuel_price: fuel_price,
-      car_id: 1,
+      car_id: car_id,
       km_added: km_added,
     });
   } catch (e) {
@@ -38,12 +40,14 @@ export interface DashboardData {
   totalKm?: number;
   pricePer100?: number;
   pricePer1?: number;
+  count: number;
 }
 
 type Sums = {
   total_km: number;
   total_price: number;
   total_fuel: number;
+  count: number;
 }[];
 
 export async function getDashboardData() {
@@ -51,17 +55,18 @@ export async function getDashboardData() {
     data: { session },
   } = await supabase.auth.getSession();
 
-  console.log("session: ", session);
   if (session) {
     const res = await supabase
       .from("entries")
       .select(
-        "total_km:km_added.sum(), total_fuel:fuel_litre.sum(), total_price:total_cost.sum()"
+        "total_km:km_added.sum(), total_fuel:fuel_litre.sum(), total_price:total_cost.sum(), count:fuel_litre.count()"
       )
+      .limit(1)
       .returns<Sums>();
 
-    if (res.data) {
-      console.log(res.data);
+    console.log(res);
+
+    if (res.data && res.data[0].count > 0) {
       return {
         totalCost: res.data[0].total_price,
         averagePricePerLitre: res.data[0].total_price / res.data[0].total_fuel,
@@ -69,6 +74,7 @@ export async function getDashboardData() {
         totalKm: res.data[0].total_km,
         pricePer100: (res.data[0].total_price / res.data[0].total_km) * 100,
         pricePer1: res.data[0].total_price / res.data[0].total_km,
+        count: res.data[0].count,
       };
     }
   }

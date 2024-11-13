@@ -7,6 +7,11 @@ import { SessionContext, supabase } from "../utils/supabase/supabase";
 import { Session } from "@supabase/supabase-js";
 
 import "@/global.css";
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
 
 export default function RootLayout() {
   const color = useColorScheme();
@@ -22,29 +27,16 @@ export default function RootLayout() {
       setSession(session);
     });
 
-    if (rootNavigationState?.key) {
-      if (session) {
-        supabase
-          .from("profile")
-          .select("id")
-          .eq("user_id", session.user.id)
-          .limit(1)
-          .then(({ data }) => {
-            console.log(data);
-            if (data && data[0].id) {
-              supabase
-                .from("cars")
-                .select("*")
-                .eq("profile_id", data[0].id)
-                .then((cars) => {
-                  console.log("cars: ", cars);
-                });
-            }
-          });
-        router.replace("/login");
-      }
-      if (!session) router.replace("/login");
-    }
+    supabase
+      .from("cars")
+      .select("*")
+      .then((cars) => {
+        if (cars.data?.length === 0) {
+          router.replace("/setup");
+        }
+      });
+
+    if (!session) router.replace("/login");
   }, []);
 
   return (
@@ -53,19 +45,21 @@ export default function RootLayout() {
         <ThemeContext.Provider
           value={color === "dark" ? darkColors : lightColors}
         >
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="login" />
-            <Stack.Screen
-              name="newEntry"
-              options={{
-                headerShown: true,
-                animation: "fade_from_bottom",
-                presentation: "formSheet",
-                headerShadowVisible: false,
-                title: "New entry",
-              }}
-            />
-          </Stack>
+          <ThemeProvider value={color === "dark" ? DarkTheme : DefaultTheme}>
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="login" />
+              <Stack.Screen
+                name="newEntry"
+                options={{
+                  headerShown: true,
+                  animation: "fade_from_bottom",
+                  presentation: "formSheet",
+                  headerShadowVisible: false,
+                  title: "New entry",
+                }}
+              />
+            </Stack>
+          </ThemeProvider>
         </ThemeContext.Provider>
       </SessionContext.Provider>
     </GluestackUIProvider>
