@@ -20,10 +20,19 @@ export async function createCar({
           user_id: session.user.id,
         })
         .select();
-      console.log(data, error);
     } catch (e) {
       console.log(e);
     }
     router.replace("/");
   }
 }
+
+export const getCarID = async () => {
+  const { data, error } = await supabase
+    .from("cars")
+    .select("id")
+    .limit(1)
+    .single();
+
+  return data?.id;
+};
