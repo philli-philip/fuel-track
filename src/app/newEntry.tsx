@@ -12,7 +12,6 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { Platform } from "react-native";
 import { Theme, ThemeContext } from "../utils/colors/colors";
 import { createEntry } from "../actions/entryActions";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams } from "expo-router";
 import { Button, ButtonText } from "@/src/components/button";
 import { HideKeyboard } from "../components/HideKeyboard";
@@ -21,7 +20,10 @@ export default function newEntry() {
   const colors = useContext(ThemeContext);
   const styles = styling(colors);
 
-  const { pedo } = useLocalSearchParams<{ pedo?: string }>();
+  const { pedo, carID } = useLocalSearchParams<{
+    pedo?: string;
+    carID?: string;
+  }>();
 
   const [fuelPrice, setPrice] = useState(1.38);
   const [open, setOpen] = useState(false);
@@ -33,13 +35,12 @@ export default function newEntry() {
   });
 
   const total_cost = fuelAmount * fuelPrice;
-  const profile_id = 1;
   const drivenKM =
     pedometer - (typeof pedo === "string" ? parseFloat(pedo) : pedometer);
   const enabled = fuelAmount > 0 && fuelPrice > 0 && drivenKM > 0;
 
   const handlePrice = (input: string) => {
-    const value = parseFloat(input);
+    const value = parseFloat(input.replace(",", ".").replace(" ", ""));
     setPrice(value);
   };
 
@@ -126,26 +127,31 @@ export default function newEntry() {
               </Text>
             </View>
           </View>
-          <Button
-            isDisabled={!enabled}
-            className="mb-2"
-            size="xl"
-            variant="solid"
-            action="primary"
-            onPress={() =>
-              createEntry({
-                pedometer,
-                profile_id: profile_id,
-                date: date.toDateString(),
-                fuel_litre: fuelAmount,
-                fuel_price: fuelPrice,
-                total_cost: total_cost,
-                km_added: drivenKM,
-              })
-            }
-          >
-            <ButtonText>Create entry</ButtonText>
-          </Button>
+          {carID ? (
+            <Button
+              isDisabled={!enabled}
+              className="mb-2"
+              size="xl"
+              variant="solid"
+              action="primary"
+              onPress={() => {
+                console.log(carID);
+                createEntry({
+                  pedometer,
+                  date: date.toDateString(),
+                  fuel_litre: fuelAmount,
+                  fuel_price: fuelPrice,
+                  total_cost: total_cost,
+                  km_added: drivenKM,
+                  car_id: parseInt(carID),
+                });
+              }}
+            >
+              <ButtonText>Create entry</ButtonText>
+            </Button>
+          ) : (
+            <Text>No car ID</Text>
+          )}
         </HideKeyboard>
       </ScrollView>
     </KeyboardAvoidingView>
