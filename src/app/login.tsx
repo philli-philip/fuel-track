@@ -55,11 +55,16 @@ export default function Auth() {
   }
 
   return (
-    <HideKeyboard style={style.container}>
+    <HideKeyboard>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <VStack space="lg" align="center">
+        <VStack
+          space="lg"
+          align="center"
+          justify="center"
+          className="px-12 h-full"
+        >
           <Image
             source={require("@/assets/images/favicon.png")}
             style={{ width: 72, height: 72 }}
@@ -73,6 +78,8 @@ export default function Auth() {
             placeholderTextColor={colors.text.light}
             onSubmitEditing={() => emailField?.current?.focus()}
             returnKeyType="next"
+            autoFocus
+            className="w-full"
           />
           <TextInput
             onChangeText={(text) => setPassword(text)}
@@ -107,12 +114,6 @@ const styling = (theme: Theme) =>
       padding: 16,
       backgroundColor: theme.bg.input,
       borderRadius: 8,
-      width: 280,
-    },
-    container: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: theme.bg.default,
+      width: "100%",
     },
   });
