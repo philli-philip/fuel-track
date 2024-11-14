@@ -7,6 +7,10 @@
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
+    "production": {
+      "cache": {
+        "key": "0.0.1"
+      }
+    }
   }
 }
