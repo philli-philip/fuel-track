@@ -8,6 +8,9 @@
       "distribution": "internal"
     },
     "production": {
+      "env": {
+        "NODE_OPTIONS": "--max-old-space-size=4096"
+      },
       "cache": {
         "key": "0.0.1"
       }
