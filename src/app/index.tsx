@@ -16,6 +16,7 @@ import { ButtonText, Button } from "@/src/components/button";
 import { DashboardData, getDashboardData } from "../actions/entryActions";
 import { SummaryGrid } from "../components/Dashboard/Summary";
 import { getCarID } from "../actions/carActions";
+import RecentRefules from "../components/Dashboard/recentRefuels";
 
 export default function Page() {
   const colors = useContext(ThemeContext);
@@ -89,6 +90,7 @@ export default function Page() {
         </TouchableOpacity>
       </View>
       {isLoading ? <Loading /> : data && <SummaryGrid data={data} />}
+      <RecentRefules />
       <Button
         variant="solid"
         size="xl"
