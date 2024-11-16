@@ -1,13 +1,7 @@
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import {
-  useContext,
-  useDeferredValue,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { SessionContext, supabase } from "../utils/supabase/supabase";
+import { useContext, useEffect, useState } from "react";
+import { supabase } from "../utils/supabase/supabase";
 import { Loading } from "../components/Dashboard/loading";
 import { Theme, ThemeContext } from "../utils/colors/colors";
 import { router } from "expo-router";

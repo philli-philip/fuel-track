@@ -18,7 +18,7 @@ export const Item = ({ item }: { item: Refule }) => (
       pathname: "/refuel/[id]",
       params: { id: item.id },
     }}
-    className="py-4 px-6 border-b flex border-gray-200 dark:border-gray-800 flex-row justify-between items-center"
+    className="py-4 px-6 border-b flex border-gray-400 dark:border-gray-800 flex-row justify-between items-center"
   >
     <VStack space="xs">
       <Text className="text-gray-900 dark:text-gray-100 font-bold text-xl">
@@ -28,7 +28,11 @@ export const Item = ({ item }: { item: Refule }) => (
         }).format(new Date(item.date))}
       </Text>
       <Text className="text-gray-800 dark:text-gray-200 text-xl">
-        {item.fuel_litre + " l"}
+        {new Intl.NumberFormat("de-DE", {
+          style: "unit",
+          unitDisplay: "long",
+          unit: "liter",
+        }).format(item.fuel_litre)}
       </Text>
     </VStack>
     <Text className="text-gray-800 dark:text-gray-200 text-xl">
@@ -78,7 +82,7 @@ export default function RecentRefules() {
     return (
       <View>
         <VStack space="lg">
-          <View className="flex-row justify-between items-center">
+          <View className="flex-row justify-between items-center px-1">
             <Text className="text-gray-800 dark:text-gray-200">
               Recent refules
             </Text>
@@ -89,7 +93,7 @@ export default function RecentRefules() {
             </Link>
           </View>
           <FlatList
-            className="border -mb-[1px] border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden"
+            className="border -mb-[1px] border-gray-400 dark:border-gray-800 rounded-xl overflow-hidden"
             data={data}
             renderItem={({ item }) => <Item item={item} />}
             keyExtractor={(item) => item.date}
