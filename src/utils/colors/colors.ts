@@ -8,6 +8,7 @@ export interface Theme {
     light: ColorValue;
     inverted: ColorValue;
     error: ColorValue;
+    accent: ColorValue;
   };
   bg: {
     default: ColorValue;
@@ -24,6 +25,7 @@ export const lightColors: Theme = {
     light: "#999",
     inverted: "#FFF",
     error: "#F00",
+    accent: "#007AFF",
   },
   bg: {
     default: "#EEE",
@@ -40,6 +42,7 @@ export const darkColors: Theme = {
     light: "#888",
     inverted: "#EEE",
     error: "#F00",
+    accent: "#0E6EFE",
   },
   bg: {
     default: "#0a0a0a",
