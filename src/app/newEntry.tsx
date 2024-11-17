@@ -13,8 +13,8 @@ import { Platform } from "react-native";
 import { Theme, ThemeContext } from "../utils/colors/colors";
 import { createEntry } from "../actions/entryActions";
 import { useLocalSearchParams } from "expo-router";
-import { Button, ButtonText } from "@/src/components/button";
 import { HideKeyboard } from "../components/HideKeyboard";
+import Button from "../components/button/button";
 
 export default function newEntry() {
   const colors = useContext(ThemeContext);
@@ -45,10 +45,7 @@ export default function newEntry() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      className="bg-white dark:bg-black"
-    >
+    <KeyboardAvoidingView style={styles.container}>
       <ScrollView style={{ flex: 1, paddingHorizontal: 16 }}>
         <HideKeyboard style={{ flex: 1 }}>
           <View>
@@ -129,11 +126,7 @@ export default function newEntry() {
           </View>
           {carID ? (
             <Button
-              isDisabled={!enabled}
-              className="mb-2"
-              size="xl"
-              variant="solid"
-              action="primary"
+              title="Create new"
               onPress={() => {
                 console.log(carID);
                 createEntry({
@@ -146,9 +139,7 @@ export default function newEntry() {
                   car_id: parseInt(carID),
                 });
               }}
-            >
-              <ButtonText>Create entry</ButtonText>
-            </Button>
+            />
           ) : (
             <Text>No car ID</Text>
           )}
@@ -184,7 +175,7 @@ const styling = (theme: Theme) =>
       flexDirection: "column",
       flex: 1,
       paddingVertical: 16,
-      backgroundColor: theme.bg.default,
+      backgroundColor: theme.bg.sheet,
     },
     note: {
       fontSize: 16,
