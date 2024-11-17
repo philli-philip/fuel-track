@@ -1,4 +1,10 @@
-import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Text,
+  Pressable,
+} from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import {
   useContext,
@@ -12,7 +18,6 @@ import { Loading } from "../components/Dashboard/loading";
 import { Theme, ThemeContext } from "../utils/colors/colors";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ButtonText, Button } from "@/src/components/button";
 import { DashboardData, getDashboardData } from "../actions/entryActions";
 import { SummaryGrid } from "../components/Dashboard/Summary";
 import { getCarID } from "../actions/carActions";
@@ -89,11 +94,8 @@ export default function Page() {
         </TouchableOpacity>
       </View>
       {isLoading ? <Loading /> : data && <SummaryGrid data={data} />}
-      <Button
-        variant="solid"
-        size="xl"
-        action="primary"
-        className="absolute bottom-24 right-4"
+      <TouchableOpacity
+        style={styles.btn}
         onPress={() =>
           router.push({
             pathname: "/newEntry",
@@ -101,8 +103,8 @@ export default function Page() {
           })
         }
       >
-        <ButtonText>New entry</ButtonText>
-      </Button>
+        <Text style={styles.btnText}>New entry</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -118,11 +120,8 @@ const styling = (theme: Theme) =>
       borderRadius: 12,
       backgroundColor: theme.bg.accent,
     },
-    btnDefault: {
-      opacity: 1,
-    },
-    btnPressed: {
-      opacity: 0.5,
+    btnText: {
+      color: theme.text.inverted,
     },
     container: {
       flexDirection: "column",

@@ -1,15 +1,14 @@
 import {
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   Text,
   TextInput,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
-import { Button, ButtonText } from "../components/button";
 import { createCar } from "../actions/carActions";
-import { VStack } from "../utils/vstack";
 
 export default function Setup() {
   const [carName, setCarName] = useState("");
@@ -22,7 +21,7 @@ export default function Setup() {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <VStack className="p-4 h-full">
+        <View className="p-4 h-full flex flex-col">
           <Text className="text-xl text-black pb-12 dark:text-white">
             Setup your car
           </Text>
@@ -56,12 +55,8 @@ export default function Setup() {
               </Text>
             </View>
           </View>
-          <Button
+          <Pressable
             className="absolute bottom-8 right-4 opacity-100 disabled:opacity-40"
-            size="xl"
-            disabled={disabled}
-            variant="solid"
-            action="primary"
             onPress={() =>
               createCar({
                 pedometer: pedometer,
@@ -69,9 +64,9 @@ export default function Setup() {
               })
             }
           >
-            <ButtonText>Create car</ButtonText>
-          </Button>
-        </VStack>
+            <Text>Create car</Text>
+          </Pressable>
+        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
