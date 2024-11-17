@@ -4,19 +4,16 @@ import {
   View,
   AppState,
   TextInput,
-  KeyboardAvoidingView,
-  Keyboard,
   Image,
-  Platform,
-  Pressable,
   StyleSheet,
+  Pressable,
+  Text,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { router } from "expo-router";
 import { supabase } from "@/src/utils/supabase/supabase";
 import { Theme, ThemeContext } from "@/src/utils/colors/colors";
-import { Button, ButtonText } from "@/src/components/button";
-import { HideKeyboard } from "../components/HideKeyboard";
-import { VStack } from "../utils/vstack";
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -35,18 +32,15 @@ export default function Auth() {
   const style = styling(colors);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const emailField = useRef<TextInput>(null);
 
   async function signInWithEmail() {
-    setLoading(true);
     const { data, error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     });
 
     if (error) {
-      setLoading(false);
       Alert.alert(error.message);
     }
     if (data.session) {
@@ -55,55 +49,42 @@ export default function Auth() {
   }
 
   return (
-    <HideKeyboard>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
-        <VStack
-          space="lg"
-          align="center"
-          justify="center"
-          className="px-12 h-full"
-        >
-          <Image
-            source={require("@/assets/images/favicon.png")}
-            style={{ width: 72, height: 72 }}
-          />
-          <TextInput
-            onChangeText={(text) => setEmail(text)}
-            value={email}
-            placeholder="email@address.com"
-            autoCapitalize="none"
-            style={style.input}
-            placeholderTextColor={colors.text.light}
-            onSubmitEditing={() => emailField?.current?.focus()}
-            returnKeyType="next"
-            autoFocus
-            className="w-full"
-          />
-          <TextInput
-            onChangeText={(text) => setPassword(text)}
-            value={password}
-            secureTextEntry={true}
-            style={style.input}
-            placeholder="Password"
-            autoCapitalize={"none"}
-            placeholderTextColor={colors.text.light}
-            onSubmitEditing={() => signInWithEmail()}
-            returnKeyType="send"
-            ref={emailField}
-          />
-          <Button
-            disabled={loading}
-            size="lg"
-            onPress={() => signInWithEmail()}
-            className="ml-auto"
-          >
-            <ButtonText>Sign in</ButtonText>
-          </Button>
-        </VStack>
-      </KeyboardAvoidingView>
-    </HideKeyboard>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={style.container}
+    >
+      <Image
+        source={require("@/assets/images/favicon.png")}
+        style={{ width: 72, height: 72 }}
+      />
+      <TextInput
+        onChangeText={(text) => setEmail(text)}
+        value={email}
+        placeholder="email@address.com"
+        autoCapitalize="none"
+        style={style.input}
+        placeholderTextColor={colors.text.light}
+        onSubmitEditing={() => emailField?.current?.focus()}
+        returnKeyType="next"
+        autoFocus
+        className="w-full"
+      />
+      <TextInput
+        onChangeText={(text) => setPassword(text)}
+        value={password}
+        secureTextEntry={true}
+        style={style.input}
+        placeholder="Password"
+        autoCapitalize={"none"}
+        placeholderTextColor={colors.text.light}
+        onSubmitEditing={() => signInWithEmail()}
+        returnKeyType="send"
+        ref={emailField}
+      />
+      <Pressable onPress={() => signInWithEmail()} style={style.button}>
+        <Text style={style.buttonText}>Sign in</Text>
+      </Pressable>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -114,6 +95,28 @@ const styling = (theme: Theme) =>
       padding: 16,
       backgroundColor: theme.bg.input,
       borderRadius: 8,
-      width: "100%",
+      alignSelf: "stretch",
+    },
+    container: {
+      flex: 1,
+      flexBasis: 1,
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: theme.bg.default,
+      paddingHorizontal: 24,
+      gap: 8,
+    },
+    button: {
+      paddingVertical: 8,
+      paddingHorizontal: 16,
+      borderRadius: 4,
+      backgroundColor: theme.bg.accent,
+      marginLeft: "auto",
+    },
+    buttonText: {
+      color: theme.text.inverted,
+      fontSize: 16,
+      fontWeight: 700,
     },
   });

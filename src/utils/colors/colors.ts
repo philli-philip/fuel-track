@@ -12,6 +12,7 @@ export interface Theme {
   bg: {
     default: ColorValue;
     input: ColorValue;
+    sheet: ColorValue;
     accent: ColorValue;
   };
 }
@@ -27,6 +28,7 @@ export const lightColors: Theme = {
   bg: {
     default: "#EEE",
     input: "#DDD",
+    sheet: "#EEE",
     accent: "#0E6EFE",
   },
 };
@@ -41,6 +43,7 @@ export const darkColors: Theme = {
   },
   bg: {
     default: "#0a0a0a",
+    sheet: "#111",
     input: "#222",
     accent: "#0E6EFE",
   },
