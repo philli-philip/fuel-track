@@ -14,6 +14,7 @@ import {
 import { router } from "expo-router";
 import { supabase } from "@/src/utils/supabase/supabase";
 import { Theme, ThemeContext } from "@/src/utils/colors/colors";
+import Button from "../components/button/button";
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -67,7 +68,6 @@ export default function Auth() {
         onSubmitEditing={() => emailField?.current?.focus()}
         returnKeyType="next"
         autoFocus
-        className="w-full"
       />
       <TextInput
         onChangeText={(text) => setPassword(text)}
@@ -81,9 +81,11 @@ export default function Auth() {
         returnKeyType="send"
         ref={emailField}
       />
-      <Pressable onPress={() => signInWithEmail()} style={style.button}>
-        <Text style={style.buttonText}>Sign in</Text>
-      </Pressable>
+      <Button
+        title="Sign in"
+        onPress={() => signInWithEmail()}
+        containerStyle={{ marginLeft: "auto" }}
+      />
     </KeyboardAvoidingView>
   );
 }
@@ -106,17 +108,5 @@ const styling = (theme: Theme) =>
       backgroundColor: theme.bg.default,
       paddingHorizontal: 24,
       gap: 8,
-    },
-    button: {
-      paddingVertical: 8,
-      paddingHorizontal: 16,
-      borderRadius: 4,
-      backgroundColor: theme.bg.accent,
-      marginLeft: "auto",
-    },
-    buttonText: {
-      color: theme.text.inverted,
-      fontSize: 16,
-      fontWeight: 700,
     },
   });
