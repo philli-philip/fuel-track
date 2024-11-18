@@ -15,6 +15,7 @@ export interface Theme {
     input: ColorValue;
     sheet: ColorValue;
     accent: ColorValue;
+    error: ColorValue;
   };
   border: ColorValue;
 }
@@ -33,6 +34,7 @@ export const lightColors: Theme = {
     input: "#DDD",
     sheet: "#EEE",
     accent: "#0E6EFE",
+    error: "#E62E31",
   },
   border: "#E5E5E5",
 };
@@ -43,7 +45,7 @@ export const darkColors: Theme = {
     secondary: "#999",
     light: "#888",
     inverted: "#EEE",
-    error: "#F00",
+    error: "#FD5356",
     accent: "#0E6EFE",
   },
   bg: {
@@ -51,6 +53,7 @@ export const darkColors: Theme = {
     sheet: "#111",
     input: "#222",
     accent: "#0E6EFE",
+    error: "#E62E31",
   },
   border: "#333",
 };

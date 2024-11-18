@@ -146,7 +146,12 @@ const Entry = ({ entry }: { entry: Entry }) => {
           </View>
         </View>
       </View>
-      <Button title="Delete" onPress={() => deleteEntry(entry.id)} />
+      <Button
+        title="Delete"
+        color="error"
+        variant="soft"
+        onPress={() => deleteEntry(entry.id)}
+      />
     </View>
   );
 };
