@@ -36,9 +36,9 @@ const Button: React.FC<ButtonProps> = ({
 const styling = (theme: Theme) =>
   StyleSheet.create({
     button: {
-      paddingVertical: 10,
-      paddingHorizontal: 20,
-      borderRadius: 5,
+      paddingVertical: 12,
+      paddingHorizontal: 24,
+      borderRadius: 12,
       alignItems: "center",
       backgroundColor: theme.bg.accent,
     },
