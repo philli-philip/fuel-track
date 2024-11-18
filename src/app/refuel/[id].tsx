@@ -1,4 +1,3 @@
-import { Skeleton } from "@/src/components/Dashboard/loading";
 import {
   formatDate,
   formatEuro,
@@ -8,9 +7,11 @@ import {
 } from "@/src/utils/formatting/formatting";
 import { supabase } from "@/src/utils/supabase/supabase";
 import { router, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
-import { View, Text, Pressable } from "react-native";
+import { useContext, useEffect, useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { Theme, ThemeContext } from "@/src/utils/colors/colors";
+import Button from "@/src/components/button/button";
 
 const deleteEntry = async (id: number | string) => {
   const { error } = await supabase.from("entries").delete().eq("id", id);
@@ -33,26 +34,31 @@ type Entry = {
 
 export default function Page() {
   const { id } = useLocalSearchParams();
-  const [isLoading, setloading] = useState(true);
   const [entry, setEntry] = useState<Entry | null>(null);
+  const [isLoading, setLoading] = useState(true);
+
+  const color = useContext(ThemeContext);
+  const style = styling(color);
 
   const getEntry = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error, status } = await supabase
         .from("entries")
         .select("date, km_added, fuel_price, fuel_litre, total_cost, pedometer")
         .eq("id", id)
         .limit(1)
         .single();
-      if (error) console.error(error.message);
       if (data) {
+        setLoading(false);
         setEntry({
           ...data,
           startingPedo: data.pedometer - data.km_added,
           id: id as string,
         });
-        setloading(false);
-      }
+      } else if (status === 406) {
+        setLoading(false);
+        setEntry(null);
+      } else if (error) throw new Error("Error while loading the entry");
     } catch (error) {
       throw new Error("Error while loading the entry");
     }
@@ -63,115 +69,105 @@ export default function Page() {
   }, []);
 
   return (
-    <View className="h-full w-full flex-col justify-start px-6 pt-8">
+    <View style={style.container}>
+      <View style={style.header}>
+        <TouchableOpacity onPress={() => router.navigate("/")}>
+          <MaterialIcons
+            name="chevron-left"
+            size={32}
+            style={{ color: color.text.primary }}
+          />
+        </TouchableOpacity>
+        <Text style={style.title}>
+          {entry && formatDate(new Date(entry.date))}
+        </Text>
+        <View style={{ width: 48, height: 48 }} />
+      </View>
       {isLoading ? (
-        <Loading />
+        <Text>Loading...</Text>
       ) : entry ? (
         <Entry entry={entry} />
       ) : (
-        <Text>Failed to load</Text>
+        <Text>Not found</Text>
       )}
     </View>
   );
 }
 
-const Entry = ({ entry }: { entry: Entry }) => (
-  <View className="flex-col gap-12 w-full">
-    <View className="flex-row justify-between items-center">
-      <Pressable
-        className="w-12 h-12 flex-col items-start justify-center"
-        onPress={() => router.navigate("../")}
-      >
-        <MaterialIcons
-          name="chevron-left"
-          size={32}
-          className="text-black dark:text-white"
-        />
-      </Pressable>
-      <Text className="text-black dark:text-gray-200 text-xl font-bold">
-        {formatDate(new Date(entry.date))}
-      </Text>
-      <View className="w-12 h-12" />
+const Entry = ({ entry }: { entry: Entry }) => {
+  const color = useContext(ThemeContext);
+  const style = styling(color);
+  return (
+    <View style={{ flexDirection: "column", flexShrink: 1 }}>
+      <View style={style.row}>
+        <View style={style.valueGroup}>
+          <Text style={style.label}>Total price</Text>
+          <Text style={style.value}>{formatEuro(entry.total_cost)}</Text>
+        </View>
+        <View style={style.valueGroup}>
+          <Text style={style.label}>Fuel added</Text>
+          <Text style={style.value}>{formatLitre(entry.fuel_litre)}</Text>
+        </View>
+      </View>
+      <View style={style.row}>
+        <View style={style.valueGroup}>
+          <Text style={style.label}>km added</Text>
+          <Text style={style.value}>{formatKM(entry.km_added)}</Text>
+          <Text style={style.label}>
+            {formatKM(entry.startingPedo) + " → " + formatKM(entry.pedometer)}
+          </Text>
+        </View>
+        <View style={style.valueGroup}>
+          <Text style={style.label}>Price per liter</Text>
+          <Text style={style.value}>{formatEurPerLitre(entry.fuel_price)}</Text>
+        </View>
+      </View>
+      <Button title="Delete" onPress={() => deleteEntry(entry.id)} />
     </View>
-    <View className="flex-row">
-      <View className="flex-col gap-1 w-1/2">
-        <Text className="text-gray-700 dark:text-gray-400">Total price</Text>
-        <Text className="font-bold text-black dark:text-gray-200 text-3xl">
-          {formatEuro(entry.total_cost)}
-        </Text>
-      </View>
-      <View className="flex-col gap-1 w-1/2">
-        <Text className="text-gray-700 dark:text-gray-400">Fuel added</Text>
-        <Text className="font-bold text-black dark:text-gray-200 text-3xl">
-          {formatLitre(entry.fuel_litre)}
-        </Text>
-      </View>
-    </View>
-    <View className="flex-row w-full">
-      <View className="flex-col gap-1 w-1/2">
-        <Text className="text-gray-700 dark:text-gray-400">km added</Text>
-        <Text className="font-bold text-black dark:text-gray-200 text-3xl">
-          {formatKM(entry.km_added)}
-        </Text>
-        <Text className=" text-gray-700 dark:text-gray-400 text-sm">
-          {formatKM(entry.startingPedo) + " → " + formatKM(entry.pedometer)}
-        </Text>
-      </View>
-      <View className="flex-col gap-1 w-1/2">
-        <Text className="text-gray-700 dark:text-gray-400">
-          Price per liter
-        </Text>
-        <Text className="font-bold text-black dark:text-gray-200 text-3xl">
-          {formatEurPerLitre(entry.fuel_price)}
-        </Text>
-      </View>
-    </View>
-    <Pressable
-      className="w-full bg-red-600/10 hover:bg-red-600/20 dark:bg-red-600/20 dark:hover:bg-red-600/40 p-4 rounded-xl flex-row justify-center"
-      onPress={() => deleteEntry(entry.id)}
-    >
-      <Text className="text-red-600 dark:text-red-600 font-bold text-md">
-        Delete
-      </Text>
-    </Pressable>
-  </View>
-);
+  );
+};
 
-const Loading = () => (
-  <View className="flex-col gap-12 w-full h-full">
-    <View className="flex-row justify-between items-center">
-      <Pressable
-        className="w-12 h-12 flex-col items-start justify-center"
-        onPress={() => router.navigate("../")}
-      >
-        <MaterialIcons
-          name="chevron-left"
-          size={32}
-          className="text-black dark:text-white"
-        />
-      </Pressable>
-      <Skeleton className="flex h-8 w-1/4" />
-      <View className="w-12 h-12" />
-    </View>
-    <View className="flex-row gap-6 ">
-      <View className="flex-col gap-2 flex-1">
-        <Skeleton className="w-1/4 h-2" key={"1-1"} />
-        <Skeleton className="w-full h-8" key={"1-2"} />
-      </View>
-      <View className="flex-col gap-2 flex-1">
-        <Skeleton className="w-1/4 h-2" key={"2-1"} />
-        <Skeleton className="w-full h-8" key={"2-2"} />
-      </View>
-    </View>
-    <View className="flex-row gap-6">
-      <View className="flex-col gap-2 flex-1">
-        <Skeleton className="w-1/4 h-2" key={"1-1"} />
-        <Skeleton className="w-full h-8" key={"1-2"} />
-      </View>
-      <View className="flex-col gap-2 flex-1">
-        <Skeleton className="w-1/4 h-2" key={"2-1"} />
-        <Skeleton className="w-full h-8" key={"2-2"} />
-      </View>
-    </View>
-  </View>
-);
+const styling = (theme: Theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      flexBasis: 1,
+      flexDirection: "column",
+      justifyContent: "flex-start",
+      paddingHorizontal: 24,
+      backgroundColor: theme.bg.default,
+    },
+    row: {
+      flex: 1,
+      flexDirection: "row",
+      paddingBlockEnd: 48,
+    },
+    value: {
+      fontSize: 24,
+      fontWeight: 700,
+      color: theme.text.primary,
+    },
+    label: {
+      fontSize: 16,
+      color: theme.text.secondary,
+    },
+    valueGroup: {
+      flex: 1,
+      gap: 1,
+      flexDirection: "column",
+    },
+    title: {
+      color: theme.text.primary,
+      fontSize: 16,
+      fontWeight: 700,
+    },
+    header: {
+      flex: 1,
+      flexBasis: 48,
+      flexGrow: 0,
+      flexShrink: 0,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+  });
