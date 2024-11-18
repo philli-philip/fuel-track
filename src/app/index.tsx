@@ -4,6 +4,7 @@ import {
   View,
   Text,
   Pressable,
+  ScrollView,
 } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useContext, useEffect, useState } from "react";
@@ -16,6 +17,7 @@ import { DashboardData, getDashboardData } from "../actions/entryActions";
 import { SummaryGrid } from "../components/Dashboard/Summary";
 import { getCarID } from "../actions/carActions";
 import RecentRefules from "../components/Dashboard/recentRefuels";
+import Button from "../components/button/button";
 
 export default function Page() {
   const colors = useContext(ThemeContext);
@@ -58,7 +60,6 @@ export default function Page() {
 
   const handleGettingData = async () => {
     const data = await getDashboardData();
-    console.log(data);
 
     if (!data) {
       setData({
@@ -79,27 +80,29 @@ export default function Page() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.bar}>
-        <TouchableOpacity onPress={handleLogout}>
-          <MaterialIcons
-            name="logout"
-            size={24}
-            color={colors.text.secondary}
-          />
-        </TouchableOpacity>
-      </View>
-      {isLoading ? <Loading /> : data && <SummaryGrid data={data} />}
-      <TouchableOpacity
-        style={styles.btn}
+      <ScrollView>
+        <View style={styles.bar}>
+          <TouchableOpacity onPress={handleLogout}>
+            <MaterialIcons
+              name="logout"
+              size={24}
+              color={colors.text.secondary}
+            />
+          </TouchableOpacity>
+        </View>
+        {isLoading ? <Loading /> : data && <SummaryGrid data={data} />}
+        <RecentRefules />
+      </ScrollView>
+      <Button
+        title="New entry"
+        containerStyle={{ position: "absolute", bottom: 72, right: 24 }}
         onPress={() =>
           router.push({
             pathname: "/newEntry",
             params: { pedo: latestPedo, carID: car_id },
           })
         }
-      >
-        <Text style={styles.btnText}>New entry</Text>
-      </TouchableOpacity>
+      />
     </SafeAreaView>
   );
 }

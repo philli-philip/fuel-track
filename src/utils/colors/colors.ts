@@ -16,6 +16,7 @@ export interface Theme {
     sheet: ColorValue;
     accent: ColorValue;
   };
+  border: ColorValue;
 }
 
 export const lightColors: Theme = {
@@ -33,6 +34,7 @@ export const lightColors: Theme = {
     sheet: "#EEE",
     accent: "#0E6EFE",
   },
+  border: "#E5E5E5",
 };
 
 export const darkColors: Theme = {
@@ -50,6 +52,7 @@ export const darkColors: Theme = {
     input: "#222",
     accent: "#0E6EFE",
   },
+  border: "#333",
 };
 
 export const ThemeContext = createContext(lightColors);

@@ -12,6 +12,8 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Theme, ThemeContext } from "@/src/utils/colors/colors";
 import Button from "@/src/components/button/button";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Skeleton } from "@/src/components/skeleton/skeleton";
 
 const deleteEntry = async (id: number | string) => {
   const { error } = await supabase.from("entries").delete().eq("id", id);
@@ -69,19 +71,29 @@ export default function Page() {
   }, []);
 
   return (
-    <View style={style.container}>
-      <View style={style.header}>
-        <TouchableOpacity onPress={() => router.navigate("/")}>
+    <SafeAreaView style={style.container}>
+      <View
+        style={{
+          flexDirection: "row",
+          gap: 4,
+          alignItems: "center",
+          paddingTop: 12,
+        }}
+      >
+        <TouchableOpacity onPress={() => router.navigate("../")}>
           <MaterialIcons
             name="chevron-left"
-            size={32}
-            style={{ color: color.text.primary }}
+            size={24}
+            style={{
+              color: color.text.primary,
+              padding: 12,
+              paddingLeft: 4,
+            }}
           />
         </TouchableOpacity>
         <Text style={style.title}>
-          {entry && formatDate(new Date(entry.date))}
+          {entry ? formatDate(new Date(entry.date)) : <Skeleton />}
         </Text>
-        <View style={{ width: 48, height: 48 }} />
       </View>
       {isLoading ? (
         <Text>Loading...</Text>
@@ -90,7 +102,7 @@ export default function Page() {
       ) : (
         <Text>Not found</Text>
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -98,28 +110,40 @@ const Entry = ({ entry }: { entry: Entry }) => {
   const color = useContext(ThemeContext);
   const style = styling(color);
   return (
-    <View style={{ flexDirection: "column", flexShrink: 1 }}>
-      <View style={style.row}>
-        <View style={style.valueGroup}>
-          <Text style={style.label}>Total price</Text>
-          <Text style={style.value}>{formatEuro(entry.total_cost)}</Text>
+    <View
+      style={{
+        flexDirection: "column",
+        flexShrink: 1,
+        flex: 1,
+        justifyContent: "flex-start",
+        paddingVertical: 16,
+      }}
+    >
+      <View style={{ flex: 1, flexDirection: "column" }}>
+        <View style={style.row}>
+          <View style={style.valueGroup}>
+            <Text style={style.label}>Total price</Text>
+            <Text style={style.value}>{formatEuro(entry.total_cost)}</Text>
+          </View>
+          <View style={style.valueGroup}>
+            <Text style={style.label}>Fuel added</Text>
+            <Text style={style.value}>{formatLitre(entry.fuel_litre)}</Text>
+          </View>
         </View>
-        <View style={style.valueGroup}>
-          <Text style={style.label}>Fuel added</Text>
-          <Text style={style.value}>{formatLitre(entry.fuel_litre)}</Text>
-        </View>
-      </View>
-      <View style={style.row}>
-        <View style={style.valueGroup}>
-          <Text style={style.label}>km added</Text>
-          <Text style={style.value}>{formatKM(entry.km_added)}</Text>
-          <Text style={style.label}>
-            {formatKM(entry.startingPedo) + " → " + formatKM(entry.pedometer)}
-          </Text>
-        </View>
-        <View style={style.valueGroup}>
-          <Text style={style.label}>Price per liter</Text>
-          <Text style={style.value}>{formatEurPerLitre(entry.fuel_price)}</Text>
+        <View style={style.row}>
+          <View style={style.valueGroup}>
+            <Text style={style.label}>km added</Text>
+            <Text style={style.value}>{formatKM(entry.km_added)}</Text>
+            <Text style={style.label}>
+              {formatKM(entry.startingPedo) + " → " + formatKM(entry.pedometer)}
+            </Text>
+          </View>
+          <View style={style.valueGroup}>
+            <Text style={style.label}>Price per liter</Text>
+            <Text style={style.value}>
+              {formatEurPerLitre(entry.fuel_price)}
+            </Text>
+          </View>
         </View>
       </View>
       <Button title="Delete" onPress={() => deleteEntry(entry.id)} />
@@ -134,16 +158,15 @@ const styling = (theme: Theme) =>
       flexBasis: 1,
       flexDirection: "column",
       justifyContent: "flex-start",
-      paddingHorizontal: 24,
+      paddingHorizontal: 16,
       backgroundColor: theme.bg.default,
     },
     row: {
+      flexDirection: "column",
       flex: 1,
-      flexDirection: "row",
-      paddingBlockEnd: 48,
     },
     value: {
-      fontSize: 24,
+      fontSize: 32,
       fontWeight: 700,
       color: theme.text.primary,
     },
@@ -158,7 +181,7 @@ const styling = (theme: Theme) =>
     },
     title: {
       color: theme.text.primary,
-      fontSize: 16,
+      fontSize: 24,
       fontWeight: 700,
     },
     header: {

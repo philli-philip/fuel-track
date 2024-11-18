@@ -31,7 +31,7 @@ export const Skeleton = ({ style }: SkeletonType) => {
   return (
     <View
       style={[
-        { borderRadius: 8, backgroundColor: "#eee", opacity: pulse },
+        { borderRadius: 8, backgroundColor: "#eee", opacity: 0.5 },
         style,
       ]}
     />

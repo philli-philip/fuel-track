@@ -128,7 +128,6 @@ export default function newEntry() {
             <Button
               title="Create new"
               onPress={() => {
-                console.log(carID);
                 createEntry({
                   pedometer,
                   date: date.toDateString(),

@@ -33,7 +33,7 @@ export const formatEurPerLitre = (amount: number) => {
   const units = amount
     .toLocaleString("de-DE", {
       style: "unit",
-      unit: "kilometer",
+      unit: "liter",
       unitDisplay: "narrow",
     })
     .split(/\s+/)

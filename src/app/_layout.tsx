@@ -5,11 +5,6 @@ import { SessionContext, supabase } from "../utils/supabase/supabase";
 import { Session } from "@supabase/supabase-js";
 
 import { useColorScheme } from "react-native";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
 
 export default function RootLayout() {
   const color = useColorScheme();
@@ -33,7 +28,7 @@ export default function RootLayout() {
         }
       });
 
-    router.replace("/login");
+    //router.replace("/login");
   }, []);
 
   return (

@@ -1,14 +1,26 @@
-import { Skeleton } from "@/src/components/Dashboard/loading";
-import { Item, Refule } from "@/src/components/Dashboard/recentRefuels";
+import { Refule } from "@/src/components/Dashboard/recentRefuels";
+import { Skeleton } from "@/src/components/skeleton/skeleton";
+import { Theme, ThemeContext } from "@/src/utils/colors/colors";
 import { supabase } from "@/src/utils/supabase/supabase";
-import { VStack } from "@/src/utils/vstack";
-import { useEffect, useState } from "react";
-import { FlatList, View, Text } from "react-native";
+import { router } from "expo-router";
+import { useContext, useEffect, useState } from "react";
+import {
+  FlatList,
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { Item } from "@/src/components/Dashboard/Entry";
 
-export default function Page() {
+export default function All() {
   const [data, setData] = useState<Refule[] | null>(null);
   const [isLoading, setLoading] = useState(true);
+
+  const color = useContext(ThemeContext);
+  const style = styling(color);
 
   const getRefuels = async () => {
     const { data, error } = await supabase
@@ -18,7 +30,7 @@ export default function Page() {
       .limit(100);
 
     console.log(data, error);
-    if (error) console.log(error);
+    if (error) throw new Error("Loading refuels failed.");
 
     setData(data);
     setLoading(false);
@@ -29,36 +41,81 @@ export default function Page() {
   }, []);
 
   return (
-    <SafeAreaView>
-      <View className="p-6">
-        <VStack space="lg">
-          <Text className="text-gray-800 dark:text-gray-200 font-bold text-2xl">
-            Recent refules
-          </Text>
-          {isLoading && <Loading />}
-          {data && (
-            <FlatList
-              className="border -mb-[1px] border-gray-400 dark:border-gray-800 rounded-xl overflow-hidden"
-              data={data}
-              renderItem={({ item }) => <Item item={item} />}
-              keyExtractor={(item) => item.date}
-            />
-          )}
-        </VStack>
+    <SafeAreaView style={style.container}>
+      <View
+        style={{
+          flexDirection: "row",
+          gap: 4,
+          alignItems: "center",
+          paddingTop: 12,
+        }}
+      >
+        <TouchableOpacity onPress={() => router.navigate("../")}>
+          <MaterialIcons
+            name="chevron-left"
+            size={24}
+            style={{
+              color: color.text.primary,
+              padding: 12,
+              paddingLeft: 4,
+            }}
+          />
+        </TouchableOpacity>
+        <Text style={style.title}>Recent refules</Text>
       </View>
+      {isLoading && <Loading />}
+      {data && (
+        <View style={{ flex: 1, flexDirection: "column" }}>
+          <View style={style.list} key={21}>
+            {data.map((item, index) => (
+              <Item
+                item={item}
+                key={item.id}
+                last={index === data.length - 1}
+              />
+            ))}
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 }
 
 const Loading = () => (
-  <View className="flex-col gap-2">
-    <Skeleton className="w-full h-16" key={1} />
-    <Skeleton className="w-full h-16" key={2} />
-    <Skeleton className="w-full h-16" key={3} />
-    <Skeleton className="w-full h-16" key={4} />
-    <Skeleton className="w-full h-16" key={5} />
-    <Skeleton className="w-full h-16" key={6} />
-    <Skeleton className="w-full h-16" key={7} />
-    <Skeleton className="w-full h-16" key={8} />
+  <View>
+    <Skeleton key={1} />
+    <Skeleton key={2} />
+    <Skeleton key={3} />
+    <Skeleton key={4} />
+    <Skeleton key={5} />
+    <Skeleton key={6} />
+    <Skeleton key={7} />
+    <Skeleton key={8} />
   </View>
 );
+
+const styling = (theme: Theme) =>
+  StyleSheet.create({
+    title: {
+      color: theme.text.primary,
+      fontSize: 24,
+      fontWeight: 700,
+    },
+    container: {
+      backgroundColor: theme.bg.default,
+      flex: 1,
+      paddingHorizontal: 16,
+      gap: 16,
+    },
+    list: {
+      borderWidth: 1,
+      overflow: "hidden",
+      borderColor: theme.border,
+      borderRadius: 16,
+      flexDirection: "column",
+      flex: 1,
+      flexShrink: 1,
+      alignContent: "stretch",
+      alignItems: "stretch",
+    },
+  });
