@@ -1,14 +1,16 @@
 import {
   KeyboardAvoidingView,
   Platform,
-  Pressable,
+  StyleSheet,
   Text,
   TextInput,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { createCar } from "../actions/carActions";
+import Button from "../components/button/button";
+import { Theme, ThemeContext } from "../utils/colors/colors";
 
 export default function Setup() {
   const [carName, setCarName] = useState("");
@@ -16,56 +18,108 @@ export default function Setup() {
 
   const disabled = carName === "" ? true : false;
 
+  const styling = (theme: Theme) =>
+    StyleSheet.create({
+      container: {
+        flexDirection: "column",
+        flexGrow: 1,
+        flexShrink: 0,
+        backgroundColor: theme.bg.default,
+      },
+      title: {
+        fontSize: 18,
+        color: theme.text.primary,
+      },
+      label: {
+        fontSize: 12,
+        color: theme.text.secondary,
+      },
+      input: {
+        fontSize: 32,
+        color: theme.text.primary,
+        fontWeight: 700,
+        flexBasis: "auto",
+      },
+      unit: {
+        fontSize: 32,
+        color: theme.text.secondary,
+      },
+      group: {
+        paddingBottom: 24,
+      },
+      form: {
+        paddingHorizontal: 24,
+      },
+    });
+
+  const colors = useContext(ThemeContext);
+  const s = styling(colors);
+
   return (
-    <SafeAreaView id="safe" className="h-full relative">
+    <SafeAreaView style={s.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1, flexGrow: 1, flexDirection: "column" }}
       >
-        <View className="p-4 h-full flex flex-col">
-          <Text className="text-xl text-black pb-12 dark:text-white">
-            Setup your car
-          </Text>
-          <View className="pb-12">
-            <Text className="text-sm text-gray-800 dark:text-gray-400">
-              Name of your car
-            </Text>
-            <View className="gap-2 flex-row">
+        <View style={{ flex: 1 }}>
+          <View
+            style={{
+              padding: 16,
+              justifyContent: "center",
+              flexDirection: "row",
+            }}
+          >
+            <Text style={s.title}>Setup your car</Text>
+          </View>
+          <View style={s.form}>
+            <View style={s.group}>
+              <Text style={s.label}>Name of your car</Text>
               <TextInput
-                className="text-4xl text-black dark:text-white font-bold"
+                style={s.input}
                 placeholder="Name your car"
                 onChangeText={(e) => setCarName(e)}
                 keyboardType="default"
                 autoFocus
+                spellCheck={false}
+                autoComplete="off"
+                multiline={false}
+                placeholderTextColor={colors.text.light}
               />
             </View>
-          </View>
-          <View className="pb-12 mb-auto flex-1">
-            <Text className="text-sm text-gray-800 dark:text-gray-400">
-              Current pedometer
-            </Text>
-            <View className="gap-2 flex-row">
-              <TextInput
-                className="text-4xl shrink flex text-black dark:text-white font-bold"
-                defaultValue={pedometer.toString()}
-                onChangeText={(e) => setPedometer(parseFloat(e))}
-                keyboardType="numeric"
-              />
-              <Text className="text-4xl text-gray-800 dark:text-gray-400">
-                km
-              </Text>
+            <View style={s.group}>
+              <Text style={s.label}>Current pedometer</Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  gap: 8,
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                }}
+              >
+                <TextInput
+                  style={s.input}
+                  defaultValue={pedometer.toString()}
+                  onChangeText={(e) => setPedometer(parseFloat(e))}
+                  keyboardType="numeric"
+                  spellCheck={false}
+                  autoComplete="off"
+                  multiline={false}
+                />
+                <Text style={s.unit}>km</Text>
+              </View>
             </View>
           </View>
-          <Pressable
-            className="absolute bottom-8 right-4 opacity-100 disabled:opacity-40"
+          <Button
+            title="Create car"
+            disabled={disabled}
+            containerStyle={{ position: "absolute", bottom: 72, right: 24 }}
             onPress={() =>
               createCar({
                 pedometer: pedometer,
                 name: carName,
               })
             }
-          >
-            <Text>Create car</Text>
-          </Pressable>
+          />
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
