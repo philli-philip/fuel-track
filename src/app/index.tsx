@@ -80,7 +80,7 @@ export default function Page() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView style={{ paddingHorizontal: 24 }}>
         <View style={styles.bar}>
           <TouchableOpacity onPress={handleLogout}>
             <MaterialIcons
@@ -124,7 +124,6 @@ const styling = (theme: Theme) =>
     container: {
       flexDirection: "column",
       flex: 1,
-      paddingHorizontal: 24,
       paddingTop: 24,
       backgroundColor: theme.bg.default,
       position: "relative",
