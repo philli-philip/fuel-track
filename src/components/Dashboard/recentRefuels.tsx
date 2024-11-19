@@ -24,7 +24,7 @@ export default function RecentRefules() {
     const { data, error } = await supabase
       .from("entries")
       .select("date, fuel_litre, total_cost, id")
-      .order("date")
+      .order("date", { ascending: false })
       .limit(3);
 
     if (error) throw new Error("failed at loading entries: " + error.message);
