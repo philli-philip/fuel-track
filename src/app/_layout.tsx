@@ -5,6 +5,11 @@ import { SessionContext, supabase } from "../utils/supabase/supabase";
 import { Session } from "@supabase/supabase-js";
 
 import { useColorScheme } from "react-native";
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
 
 export default function RootLayout() {
   const color = useColorScheme();
@@ -36,19 +41,21 @@ export default function RootLayout() {
       <ThemeContext.Provider
         value={color === "dark" ? darkColors : lightColors}
       >
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="login" />
-          <Stack.Screen
-            name="newEntry"
-            options={{
-              headerShown: true,
-              animation: "fade_from_bottom",
-              presentation: "formSheet",
-              headerShadowVisible: false,
-              title: "New entry",
-            }}
-          />
-        </Stack>
+        <ThemeProvider value={color === "dark" ? DarkTheme : DefaultTheme}>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="login" />
+            <Stack.Screen
+              name="newEntry"
+              options={{
+                headerShown: true,
+                animation: "fade_from_bottom",
+                presentation: "formSheet",
+                headerShadowVisible: false,
+                title: "New entry",
+              }}
+            />
+          </Stack>
+        </ThemeProvider>
       </ThemeContext.Provider>
     </SessionContext.Provider>
   );

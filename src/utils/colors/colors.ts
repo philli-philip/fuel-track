@@ -50,7 +50,7 @@ export const darkColors: Theme = {
   },
   bg: {
     default: "#0a0a0a",
-    sheet: "#111",
+    sheet: "#121212",
     input: "#222",
     accent: "#0E6EFE",
     error: "#E62E31",
