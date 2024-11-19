@@ -9,6 +9,7 @@ import {
   ViewStyle,
   TextStyle,
   useColorScheme,
+  TouchableOpacityProps,
 } from "react-native";
 
 type ButtonProps = {
@@ -20,13 +21,14 @@ type ButtonProps = {
   variant?: "solid" | "soft";
 };
 
-const Button: React.FC<ButtonProps> = ({
+const Button: React.FC<ButtonProps & TouchableOpacityProps> = ({
   title,
   onPress,
   containerStyle,
   textStyle,
   color = "primary",
   variant = "solid",
+  ...props
 }) => {
   const theme = useColorScheme();
   const colors = useContext(ThemeContext);
@@ -58,7 +60,7 @@ const Button: React.FC<ButtonProps> = ({
       color: colors.text.error,
     },
   });
-  
+
   const softPrimary = StyleSheet.create({
     button: {
       backgroundColor: colors.bg.accent,
@@ -78,6 +80,7 @@ const Button: React.FC<ButtonProps> = ({
     <TouchableOpacity
       style={[styles.button, stl[variant][color].button, containerStyle]}
       onPress={onPress}
+      {...props}
     >
       <Text style={[styles.text, stl[variant][color].text, textStyle]}>
         {title}
