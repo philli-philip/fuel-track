@@ -3,9 +3,7 @@ import {
   TextInput,
   View,
   StyleSheet,
-  Pressable,
-  KeyboardAvoidingView,
-  ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import { useContext, useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -27,7 +25,7 @@ export default function newEntry() {
 
   const [fuelPrice, setPrice] = useState(1.38);
   const [open, setOpen] = useState(false);
-  const [pedometer, setPedometer] = useState(pedo ? parseInt(pedo) : 0);
+  const [pedometer, setPedometer] = useState(pedo ? parseFloat(pedo) : 0);
   const [fuelAmount, setFuelAmount] = useState(65);
   const [date, setDate] = useState(new Date());
   const dateFormater = new Intl.DateTimeFormat("de-DE", {
@@ -45,106 +43,106 @@ export default function newEntry() {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container}>
-      <ScrollView style={{ flex: 1, paddingHorizontal: 16 }}>
-        <HideKeyboard style={{ flex: 1 }}>
-          <View>
-            <View
-              style={styles.group}
-              className="flex-col flex-1 justify-start"
-            >
-              <Text style={styles.label}>Date</Text>
-              {Platform.OS !== "ios" ? (
-                <Pressable onPress={() => setOpen(true)}>
-                  <Text style={styles.value}>{dateFormater.format(date)}</Text>
-                </Pressable>
-              ) : (
-                open && (
-                  <View className="flex-1 flex-row justify-start p-0 -mx-4">
-                    <DateTimePicker
-                      testID="dateTimePicker"
-                      value={date}
-                      mode={"date"}
-                      is24Hour={true}
-                      onChange={(e) => {
-                        setDate(new Date(e.nativeEvent.timestamp));
-                        setOpen(false);
-                      }}
-                    />
-                  </View>
-                )
-              )}
-            </View>
-            <View style={styles.group}>
-              <Text style={styles.label}>New pedometer value</Text>
-              <View style={styles.inputRow}>
-                <TextInput
-                  style={styles.value}
-                  value={pedometer >= 0 ? pedometer.toString() : "0"}
-                  onChangeText={(e) => setPedometer(parseInt(e))}
-                  keyboardType="numeric"
-                  autoFocus
-                />
-                <Text style={styles.unit}>km</Text>
-              </View>
-              {pedo && drivenKM > 0 && (
-                <Text style={styles.note}>{drivenKM}km driven</Text>
-              )}
-              {pedo && drivenKM < 0 && (
-                <Text style={styles.noteAlert}>
-                  You cannot deduct from your pedometer
-                </Text>
-              )}
-            </View>
-            <View style={styles.group}>
-              <Text style={styles.label}>Added fuel</Text>
-              <View style={styles.inputRow}>
-                <TextInput
-                  style={styles.value}
-                  defaultValue={fuelAmount > 0 ? fuelAmount.toString() : "0"}
-                  keyboardType="numeric"
-                  onChangeText={(text) => setFuelAmount(parseFloat(text))}
-                />
-                <Text style={styles.unit}>litre</Text>
-              </View>
-            </View>
-            <View style={styles.group}>
-              <Text style={styles.label}>Fuel price</Text>
-              <View style={styles.inputRow}>
-                <TextInput
-                  style={styles.value}
-                  defaultValue="1.89"
-                  keyboardType="numeric"
-                  onChangeText={(text) => handlePrice(text)}
-                />
-                <Text style={styles.unit}>€/litre</Text>
-              </View>
-              <Text style={styles.note}>
-                {total_cost.toFixed(2)}€ for this refeuling?
-              </Text>
-            </View>
-          </View>
-          {carID ? (
-            <Button
-              title="Create new"
-              onPress={() => {
-                createEntry({
-                  pedometer,
-                  date: date.toDateString(),
-                  fuel_litre: fuelAmount,
-                  fuel_price: fuelPrice,
-                  total_cost: total_cost,
-                  km_added: drivenKM,
-                  car_id: parseInt(carID),
-                });
+    <View style={styles.container}>
+      <View style={styles.group}>
+        <Text style={styles.label}>Date</Text>
+        {Platform.OS !== "ios" && (
+          <TouchableOpacity onPress={() => setOpen(true)}>
+            <Text style={styles.value}>{dateFormater.format(date)}</Text>
+          </TouchableOpacity>
+        )}
+        {open ||
+          (Platform.OS === "ios" && (
+            <DateTimePicker
+              style={{
+                padding: 0,
+                margin: 0,
+                marginTop: 4,
+                left: -10,
+              }}
+              testID="dateTimePicker"
+              value={date}
+              mode="date"
+              onChange={(e) => {
+                setDate(new Date(e.nativeEvent.timestamp));
+                setOpen(false);
               }}
             />
-          ) : (
-            <Text>No car ID</Text>
-          )}
-        </HideKeyboard>
-      </ScrollView>
-    </KeyboardAvoidingView>
+          ))}
+      </View>
+      <View style={styles.group}>
+        <Text style={styles.label}>New pedometer value</Text>
+        <View style={styles.inputRow}>
+          <TextInput
+            style={styles.value}
+            value={pedometer >= 0 ? pedometer.toString() : "0"}
+            onChangeText={(e) =>
+              setPedometer(parseFloat(e.replace(",", ".").replace(" ", "")))
+            }
+            keyboardType="numeric"
+            multiline={false}
+            autoFocus
+          />
+          <Text style={styles.unit}>km</Text>
+        </View>
+        {pedo && drivenKM > 0 && (
+          <Text style={styles.note}>{drivenKM}km driven</Text>
+        )}
+        {pedo && drivenKM < 0 && (
+          <Text style={styles.noteAlert}>
+            You cannot deduct from your pedometer
+          </Text>
+        )}
+      </View>
+      <View style={styles.group}>
+        <Text style={styles.label}>Added fuel</Text>
+        <View style={styles.inputRow}>
+          <TextInput
+            style={styles.value}
+            defaultValue={fuelAmount > 0 ? fuelAmount.toString() : "0"}
+            keyboardType="numeric"
+            onChangeText={(text) =>
+              setFuelAmount(parseFloat(text.replace(",", ".").replace(" ", "")))
+            }
+            multiline={false}
+          />
+          <Text style={styles.unit}>litre</Text>
+        </View>
+      </View>
+      <View style={styles.group}>
+        <Text style={styles.label}>Fuel price</Text>
+        <View style={styles.inputRow}>
+          <TextInput
+            style={styles.value}
+            defaultValue="1.89"
+            keyboardType="numeric"
+            onChangeText={(text) => handlePrice(text)}
+            multiline={false}
+          />
+          <Text style={styles.unit}>€/litre</Text>
+        </View>
+        <Text style={styles.note}>
+          {total_cost.toFixed(2)}€ for this refeuling?
+        </Text>
+      </View>
+      {carID && (
+        <Button
+          title="Create new"
+          containerStyle={{ position: "absolute", right: 24, bottom: 48 }}
+          onPress={() => {
+            createEntry({
+              pedometer,
+              date: date.toDateString(),
+              fuel_litre: fuelAmount,
+              fuel_price: fuelPrice,
+              total_cost: total_cost,
+              km_added: drivenKM,
+              car_id: parseInt(carID),
+            });
+          }}
+        />
+      )}
+    </View>
   );
 }
 
@@ -165,15 +163,19 @@ const styling = (theme: Theme) =>
     },
     group: {
       paddingBottom: 48,
+      flex: 1,
+      flexDirection: "column",
+      paddingHorizontal: 24,
+    },
+    form: {
+      flex: 1,
     },
     inputRow: {
       flexDirection: "row",
       gap: 2,
     },
     container: {
-      flexDirection: "column",
       flex: 1,
-      paddingVertical: 16,
       backgroundColor: theme.bg.sheet,
     },
     note: {
