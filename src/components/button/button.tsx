@@ -4,7 +4,6 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
-  GestureResponderEvent,
   StyleProp,
   ViewStyle,
   TextStyle,
@@ -14,7 +13,6 @@ import {
 
 type ButtonProps = {
   title: string;
-  onPress: (event: GestureResponderEvent) => void;
   containerStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   color?: "primary" | "error";
