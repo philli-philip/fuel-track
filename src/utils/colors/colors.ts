@@ -43,7 +43,7 @@ export const darkColors: Theme = {
   text: {
     primary: "#fff",
     secondary: "#999",
-    light: "#888",
+    light: "#555",
     inverted: "#EEE",
     error: "#FD5356",
     accent: "#0E6EFE",
