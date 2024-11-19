@@ -26,7 +26,7 @@ export default function All() {
     const { data, error } = await supabase
       .from("entries")
       .select("date, fuel_litre, total_cost, id")
-      .order("date")
+      .order("date", { ascending: false })
       .limit(100);
 
     console.log(data, error);
