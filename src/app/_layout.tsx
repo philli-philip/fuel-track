@@ -33,7 +33,7 @@ export default function RootLayout() {
         }
       });
 
-    //router.replace("/login");
+    router.replace("/login");
   }, []);
 
   return (
