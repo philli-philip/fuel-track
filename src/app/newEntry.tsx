@@ -177,6 +177,7 @@ export default function newEntry() {
                 right: 24,
                 bottom: 24,
               }}
+              disabled={!enabled}
               onPressIn={() => {
                 createEntry({
                   pedometer,

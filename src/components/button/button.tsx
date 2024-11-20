@@ -50,6 +50,15 @@ const Button: React.FC<ButtonProps & TouchableOpacityProps> = ({
     },
   });
 
+  const solidDisabled = StyleSheet.create({
+    button: {
+      backgroundColor: colors.bg.input,
+    },
+    text: {
+      color: colors.text.light,
+    },
+  });
+
   const softError = StyleSheet.create({
     button: {
       backgroundColor: theme === "light" ? "#F6C3C3" : "#2E090A",
@@ -70,17 +79,34 @@ const Button: React.FC<ButtonProps & TouchableOpacityProps> = ({
   });
 
   const stl = {
-    solid: { primary: solidPrimary, error: solidError },
-    soft: { primary: softPrimary, error: softError },
+    solid: {
+      primary: solidPrimary,
+      error: solidError,
+      disabled: solidDisabled,
+    },
+    soft: { primary: softPrimary, error: softError, disabled: solidDisabled },
   };
 
   return (
     <TouchableOpacity
-      style={[styles.button, stl[variant][color].button, containerStyle]}
+      style={[
+        styles.button,
+        stl[variant][color].button,
+        props.disabled && stl[variant]["disabled"].button,
+        containerStyle,
+      ]}
       onPress={onPress}
       {...props}
     >
-      <Text style={[styles.text, stl[variant][color].text, textStyle]}>
+      <Text
+        style={[
+          styles.text,
+          stl[variant][color].text,
+          props.disabled && stl[variant]["disabled"].text,
+          ,
+          textStyle,
+        ]}
+      >
         {title}
       </Text>
     </TouchableOpacity>
