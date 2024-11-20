@@ -4,31 +4,111 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
-  GestureResponderEvent,
   StyleProp,
   ViewStyle,
   TextStyle,
+  useColorScheme,
+  TouchableOpacityProps,
 } from "react-native";
 
 type ButtonProps = {
   title: string;
-  onPress: (event: GestureResponderEvent) => void;
   containerStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
+  color?: "primary" | "error";
+  variant?: "solid" | "soft";
 };
 
-const Button: React.FC<ButtonProps> = ({
+const Button: React.FC<ButtonProps & TouchableOpacityProps> = ({
   title,
   onPress,
   containerStyle,
   textStyle,
+  color = "primary",
+  variant = "solid",
+  ...props
 }) => {
+  const theme = useColorScheme();
   const colors = useContext(ThemeContext);
   const styles = styling(colors);
 
+  const solidPrimary = StyleSheet.create({
+    button: {
+      backgroundColor: colors.bg.accent,
+    },
+    text: {
+      color: colors.text.inverted,
+    },
+  });
+
+  const solidError = StyleSheet.create({
+    button: {
+      backgroundColor: colors.bg.error,
+    },
+    text: {
+      color: colors.text.inverted,
+    },
+  });
+
+  const solidDisabled = StyleSheet.create({
+    button: {
+      backgroundColor: colors.bg.input,
+    },
+    text: {
+      color: colors.text.light,
+    },
+  });
+
+  const softError = StyleSheet.create({
+    button: {
+      backgroundColor: theme === "light" ? "#F6C3C3" : "#2E090A",
+    },
+    text: {
+      color: colors.text.error,
+    },
+  });
+
+  const softPrimary = StyleSheet.create({
+    button: {
+      backgroundColor: colors.bg.accent,
+      opacity: 0.4,
+    },
+    text: {
+      color: colors.text.accent,
+    },
+  });
+
+  const stl = {
+    solid: {
+      primary: solidPrimary,
+      error: solidError,
+      disabled: solidDisabled,
+    },
+    soft: { primary: softPrimary, error: softError, disabled: solidDisabled },
+  };
+
   return (
-    <TouchableOpacity style={[styles.button, containerStyle]} onPress={onPress}>
-      <Text style={[styles.text, textStyle]}>{title}</Text>
+    <TouchableOpacity
+      style={[
+        styles.button,
+        stl[variant][color].button,
+        props.disabled && stl[variant]["disabled"].button,
+        containerStyle,
+      ]}
+      onPress={onPress}
+      {...props}
+    >
+      <Text
+        style={[
+          styles.text,
+          stl[variant][color].text,
+          props.disabled && stl[variant]["disabled"].text,
+          ,
+          textStyle,
+        ]}
+      >
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -36,9 +116,9 @@ const Button: React.FC<ButtonProps> = ({
 const styling = (theme: Theme) =>
   StyleSheet.create({
     button: {
-      paddingVertical: 10,
-      paddingHorizontal: 20,
-      borderRadius: 5,
+      paddingVertical: 12,
+      paddingHorizontal: 24,
+      borderRadius: 12,
       alignItems: "center",
       backgroundColor: theme.bg.accent,
     },

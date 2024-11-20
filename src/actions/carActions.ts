@@ -20,8 +20,8 @@ export async function createCar({
           user_id: session.user.id,
         })
         .select();
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      throw new Error("Could not create car entry.");
     }
     router.replace("/");
   }

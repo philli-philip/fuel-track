@@ -29,7 +29,7 @@ export async function createEntry({
       km_added: km_added,
     });
   } catch (e) {
-    console.log(e);
+    throw new Error("Could not create new entry.");
   }
   router.replace("/");
 }
@@ -63,8 +63,6 @@ export async function getDashboardData() {
       )
       .limit(1)
       .returns<Sums>();
-
-    console.log(res);
 
     if (res.data && res.data[0].count > 0) {
       return {

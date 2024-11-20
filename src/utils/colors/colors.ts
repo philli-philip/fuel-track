@@ -8,13 +8,16 @@ export interface Theme {
     light: ColorValue;
     inverted: ColorValue;
     error: ColorValue;
+    accent: ColorValue;
   };
   bg: {
     default: ColorValue;
     input: ColorValue;
     sheet: ColorValue;
     accent: ColorValue;
+    error: ColorValue;
   };
+  border: ColorValue;
 }
 
 export const lightColors: Theme = {
@@ -24,29 +27,35 @@ export const lightColors: Theme = {
     light: "#999",
     inverted: "#FFF",
     error: "#F00",
+    accent: "#007AFF",
   },
   bg: {
     default: "#EEE",
     input: "#DDD",
     sheet: "#EEE",
     accent: "#0E6EFE",
+    error: "#E62E31",
   },
+  border: "#E5E5E5",
 };
 
 export const darkColors: Theme = {
   text: {
     primary: "#fff",
     secondary: "#999",
-    light: "#888",
+    light: "#555",
     inverted: "#EEE",
-    error: "#F00",
+    error: "#FD5356",
+    accent: "#0E6EFE",
   },
   bg: {
     default: "#0a0a0a",
-    sheet: "#111",
+    sheet: "#121212",
     input: "#222",
     accent: "#0E6EFE",
+    error: "#E62E31",
   },
+  border: "#333",
 };
 
 export const ThemeContext = createContext(lightColors);

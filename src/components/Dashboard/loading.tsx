@@ -1,5 +1,6 @@
 import React from "react";
-import { View, ViewProps } from "react-native";
+import { View } from "react-native";
+import { Skeleton } from "../skeleton/skeleton";
 
 export const Loading = () => (
   <View className="dark:bg-neutral-950 flex-col bg-gray-100 flex-1 px-6 gap-12">
@@ -35,13 +36,3 @@ export const Loading = () => (
     </View>
   </View>
 );
-
-type SkeletonType = ViewProps & { className?: string };
-
-export const Skeleton = ({ className }: SkeletonType) => {
-  return (
-    <View
-      className={`rounded-lg animate-pulse bg-gray-100 dark:bg-gray-800 ${className}`}
-    />
-  );
-};

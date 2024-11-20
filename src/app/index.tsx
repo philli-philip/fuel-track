@@ -4,16 +4,11 @@ import {
   View,
   Text,
   Pressable,
+  ScrollView,
 } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import {
-  useContext,
-  useDeferredValue,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { SessionContext, supabase } from "../utils/supabase/supabase";
+import { useContext, useEffect, useState } from "react";
+import { supabase } from "../utils/supabase/supabase";
 import { Loading } from "../components/Dashboard/loading";
 import { Theme, ThemeContext } from "../utils/colors/colors";
 import { router } from "expo-router";
@@ -21,6 +16,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { DashboardData, getDashboardData } from "../actions/entryActions";
 import { SummaryGrid } from "../components/Dashboard/Summary";
 import { getCarID } from "../actions/carActions";
+import RecentRefules from "../components/Dashboard/recentRefuels";
+import Button from "../components/button/button";
 
 export default function Page() {
   const colors = useContext(ThemeContext);
@@ -63,7 +60,6 @@ export default function Page() {
 
   const handleGettingData = async () => {
     const data = await getDashboardData();
-    console.log(data);
 
     if (!data) {
       setData({
@@ -84,27 +80,29 @@ export default function Page() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.bar}>
-        <TouchableOpacity onPress={handleLogout}>
-          <MaterialIcons
-            name="logout"
-            size={24}
-            color={colors.text.secondary}
-          />
-        </TouchableOpacity>
-      </View>
-      {isLoading ? <Loading /> : data && <SummaryGrid data={data} />}
-      <TouchableOpacity
-        style={styles.btn}
+      <ScrollView style={{ paddingHorizontal: 24 }}>
+        <View style={styles.bar}>
+          <TouchableOpacity onPress={handleLogout}>
+            <MaterialIcons
+              name="logout"
+              size={24}
+              color={colors.text.secondary}
+            />
+          </TouchableOpacity>
+        </View>
+        {isLoading ? <Loading /> : data && <SummaryGrid data={data} />}
+        <RecentRefules />
+      </ScrollView>
+      <Button
+        title="New entry"
+        containerStyle={{ position: "absolute", bottom: 72, right: 24 }}
         onPress={() =>
           router.push({
             pathname: "/newEntry",
             params: { pedo: latestPedo, carID: car_id },
           })
         }
-      >
-        <Text style={styles.btnText}>New entry</Text>
-      </TouchableOpacity>
+      />
     </SafeAreaView>
   );
 }
@@ -126,7 +124,6 @@ const styling = (theme: Theme) =>
     container: {
       flexDirection: "column",
       flex: 1,
-      paddingHorizontal: 24,
       paddingTop: 24,
       backgroundColor: theme.bg.default,
       position: "relative",

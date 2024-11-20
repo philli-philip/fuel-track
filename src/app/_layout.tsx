@@ -8,7 +8,6 @@ import { useColorScheme } from "react-native";
 import {
   DarkTheme,
   DefaultTheme,
-  Theme,
   ThemeProvider,
 } from "@react-navigation/native";
 
@@ -48,11 +47,8 @@ export default function RootLayout() {
             <Stack.Screen
               name="newEntry"
               options={{
-                headerShown: true,
+                headerShown: false,
                 animation: "fade_from_bottom",
-                presentation: "formSheet",
-                headerShadowVisible: false,
-                title: "New entry",
               }}
             />
           </Stack>
