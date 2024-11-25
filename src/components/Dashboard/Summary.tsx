@@ -37,7 +37,7 @@ export const SummaryGrid = ({ data }: { data: DashboardData }) => {
         <View style={styles.group}>
           <Text style={styles.label}>Average price</Text>
           <Text style={styles.value}>
-            {data.averagePricePerLitre?.toFixed(2)} €/litre
+            {data.averagePricePerLitre?.toFixed(2)} €/l
           </Text>
         </View>
       </View>
