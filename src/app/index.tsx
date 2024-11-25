@@ -2,8 +2,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  Text,
-  Pressable,
   ScrollView,
   RefreshControl,
 } from "react-native";
@@ -13,13 +11,13 @@ import { supabase } from "../utils/supabase/supabase";
 import { Loading } from "../components/Dashboard/loading";
 import { Theme, ThemeContext } from "../utils/colors/colors";
 import { router, useFocusEffect } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { DashboardData, getDashboardData } from "../actions/entryActions";
 import { SummaryGrid } from "../components/Dashboard/Summary";
 import { getCarID } from "../actions/carActions";
 import RecentRefules, { Refule } from "../components/Dashboard/recentRefuels";
 import Button from "../components/button/button";
 import React from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Page() {
   const colors = useContext(ThemeContext);
@@ -30,6 +28,7 @@ export default function Page() {
   const [refuelData, setRefuelData] = useState<Refule[] | null>(null);
   const [car_id, setCar_id] = useState<number | null>(null);
   const [refuelsLoading, setRefuelsLoading] = useState(true);
+  const insets = useSafeAreaInsets();
 
   const styles = styling(colors);
 
@@ -107,9 +106,9 @@ export default function Page() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={{ flex: 1, flexDirection: "column" }}>
       <ScrollView
-        style={{ paddingHorizontal: 24 }}
+        style={[styles.container, { paddingTop: insets.top }]}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -140,9 +139,10 @@ export default function Page() {
           position: "absolute",
           bottom: 72,
           right: 16,
-          paddingHorizontal: 32,
-          paddingVertical: 16,
+          paddingHorizontal: 24,
+          paddingVertical: 12,
         }}
+        textStyle={{ fontSize: 18, fontWeight: 700 }}
         onPress={() =>
           router.push({
             pathname: "/newEntry",
@@ -150,7 +150,7 @@ export default function Page() {
           })
         }
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -171,11 +171,13 @@ const styling = (theme: Theme) =>
     container: {
       flexDirection: "column",
       flex: 1,
-      paddingTop: 24,
       backgroundColor: theme.bg.default,
       position: "relative",
+      paddingLeft: 24,
+      paddingRight: 24,
     },
     bar: {
+      paddingTop: 24,
       paddingBottom: 24,
       paddingHorizontal: 16,
       flexDirection: "row",

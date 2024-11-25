@@ -1,20 +1,31 @@
 import { ThemeContext, darkColors, lightColors } from "../utils/colors/colors";
 import { router, Stack } from "expo-router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SessionContext, supabase } from "../utils/supabase/supabase";
 import { Session } from "@supabase/supabase-js";
 
-import { useColorScheme } from "react-native";
+import { Platform, useColorScheme } from "react-native";
 import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
 } from "@react-navigation/native";
+import * as NavigationBar from "expo-navigation-bar";
+import * as StatusBar from "expo-status-bar";
 
 export default function RootLayout() {
   const color = useColorScheme();
   const [session, setSession] = useState<Session | null>(null);
   const [isloading, setLoading] = useState(true);
+
+  const bg = color === "dark" ? darkColors.bg.default : lightColors.bg.default;
+
+  useEffect(() => {
+    if (Platform.OS == "android") {
+      NavigationBar.setBackgroundColorAsync(bg);
+      StatusBar.setStatusBarBackgroundColor(bg);
+    }
+  }, [bg]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {

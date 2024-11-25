@@ -7,8 +7,9 @@ import {
   SafeAreaView,
   ScrollView,
   KeyboardAvoidingView,
+  Pressable,
 } from "react-native";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Platform } from "react-native";
 import { Theme, ThemeContext } from "../utils/colors/colors";
@@ -31,6 +32,9 @@ export default function newEntry() {
   const [pedometer, setPedometer] = useState(pedo ? parseFloat(pedo) : 0);
   const [fuelAmount, setFuelAmount] = useState(65);
   const [date, setDate] = useState(new Date());
+  const pedoRef = useRef<TextInput | null>(null);
+  const fuelAmountRef = useRef<TextInput | null>(null);
+  const fuelPriceRef = useRef<TextInput | null>(null);
   const dateFormater = new Intl.DateTimeFormat("de-DE", {
     dateStyle: "long",
   });
@@ -112,6 +116,7 @@ export default function newEntry() {
                 <Text style={styles.label}>New pedometer value</Text>
                 <View style={styles.inputRow}>
                   <TextInput
+                    ref={pedoRef}
                     style={styles.value}
                     value={pedometer >= 0 ? pedometer.toString() : "0"}
                     onChangeText={(e) =>
@@ -121,9 +126,12 @@ export default function newEntry() {
                     }
                     keyboardType="numeric"
                     multiline={false}
+                    selectTextOnFocus
                     autoFocus
                   />
-                  <Text style={styles.unit}>km</Text>
+                  <Pressable onPress={() => pedoRef.current?.focus()}>
+                    <Text style={styles.unit}>km</Text>
+                  </Pressable>
                 </View>
                 {pedo && drivenKM > 0 && (
                   <Text style={styles.note}>{drivenKM}km driven</Text>
@@ -139,6 +147,7 @@ export default function newEntry() {
                 <View style={styles.inputRow}>
                   <TextInput
                     style={styles.value}
+                    ref={fuelAmountRef}
                     defaultValue={fuelAmount > 0 ? fuelAmount.toString() : "0"}
                     keyboardType="numeric"
                     onChangeText={(text) =>
@@ -147,8 +156,11 @@ export default function newEntry() {
                       )
                     }
                     multiline={false}
+                    selectTextOnFocus
                   />
-                  <Text style={styles.unit}>litre</Text>
+                  <Pressable onPress={() => fuelAmountRef.current?.focus()}>
+                    <Text style={styles.unit}>litre</Text>
+                  </Pressable>
                 </View>
               </View>
               <View style={styles.group}>
@@ -156,12 +168,16 @@ export default function newEntry() {
                 <View style={styles.inputRow}>
                   <TextInput
                     style={styles.value}
+                    ref={fuelPriceRef}
                     defaultValue="1.89"
                     keyboardType="numeric"
                     onChangeText={(text) => handlePrice(text)}
                     multiline={false}
+                    selectTextOnFocus
                   />
-                  <Text style={styles.unit}>€/litre</Text>
+                  <Pressable onPress={() => fuelPriceRef.current?.focus()}>
+                    <Text style={styles.unit}>€/litre</Text>
+                  </Pressable>
                 </View>
                 <Text style={styles.note}>
                   {total_cost.toFixed(2)}€ for this refeuling?
@@ -225,6 +241,7 @@ const styling = (theme: Theme) =>
     inputRow: {
       flexDirection: "row",
       gap: 2,
+      alignItems: "center",
     },
     title: {
       color: theme.text.primary,

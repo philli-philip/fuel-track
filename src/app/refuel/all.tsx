@@ -5,24 +5,28 @@ import { supabase } from "@/src/utils/supabase/supabase";
 import { router } from "expo-router";
 import { useContext, useEffect, useState } from "react";
 import {
-  FlatList,
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
+  ScrollView,
+  RefreshControl,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Item } from "@/src/components/Dashboard/Entry";
 
 export default function All() {
   const [data, setData] = useState<Refule[] | null>(null);
   const [isLoading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   const color = useContext(ThemeContext);
   const style = styling(color);
+  const insets = useSafeAreaInsets();
 
   const getRefuels = async () => {
+    setLoading(true);
     const { data, error } = await supabase
       .from("entries")
       .select("date, fuel_litre, total_cost, id")
@@ -33,14 +37,33 @@ export default function All() {
 
     setData(data);
     setLoading(false);
+    setRefreshing(false);
   };
 
   useEffect(() => {
     getRefuels();
   }, []);
 
+  const Loading = () => (
+    <View>
+      <Skeleton style={style.skeleton} />
+      <Skeleton style={style.skeleton} />
+      <Skeleton style={style.skeleton} />
+      <Skeleton style={style.skeleton} />
+      <Skeleton style={style.skeleton} />
+      <Skeleton style={style.skeleton} />
+      <Skeleton style={style.skeleton} />
+      <Skeleton style={style.skeleton} />
+    </View>
+  );
+
   return (
-    <SafeAreaView style={style.container}>
+    <ScrollView
+      style={[style.container, { paddingTop: insets.top }]}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={getRefuels} />
+      }
+    >
       <View
         style={{
           flexDirection: "row",
@@ -63,8 +86,8 @@ export default function All() {
         <Text style={style.title}>Recent refules</Text>
       </View>
       {isLoading && <Loading />}
-      {data && (
-        <View style={{ flex: 1, flexDirection: "column" }}>
+      {!isLoading && data && (
+        <View style={{ flex: 1, flexDirection: "column", paddingBottom: 144 }}>
           <View style={style.list} key={21}>
             {data.map((item, index) => (
               <Item
@@ -76,22 +99,9 @@ export default function All() {
           </View>
         </View>
       )}
-    </SafeAreaView>
+    </ScrollView>
   );
 }
-
-const Loading = () => (
-  <View>
-    <Skeleton key={1} />
-    <Skeleton key={2} />
-    <Skeleton key={3} />
-    <Skeleton key={4} />
-    <Skeleton key={5} />
-    <Skeleton key={6} />
-    <Skeleton key={7} />
-    <Skeleton key={8} />
-  </View>
-);
 
 const styling = (theme: Theme) =>
   StyleSheet.create({
@@ -116,5 +126,10 @@ const styling = (theme: Theme) =>
       flexShrink: 1,
       alignContent: "stretch",
       alignItems: "stretch",
+    },
+    skeleton: {
+      flex: 1,
+      height: 40,
+      paddingBottom: 32,
     },
   });
