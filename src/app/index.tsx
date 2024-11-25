@@ -5,6 +5,7 @@ import {
   Text,
   Pressable,
   ScrollView,
+  RefreshControl,
 } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useContext, useEffect, useState } from "react";
@@ -16,20 +17,24 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { DashboardData, getDashboardData } from "../actions/entryActions";
 import { SummaryGrid } from "../components/Dashboard/Summary";
 import { getCarID } from "../actions/carActions";
-import RecentRefules from "../components/Dashboard/recentRefuels";
+import RecentRefules, { Refule } from "../components/Dashboard/recentRefuels";
 import Button from "../components/button/button";
 
 export default function Page() {
   const colors = useContext(ThemeContext);
   const [isLoading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(true);
   const [latestPedo, setLatestPedo] = useState(0);
   const [data, setData] = useState<DashboardData | null>(null);
+  const [refuelData, setRefuelData] = useState<Refule[] | null>(null);
   const [car_id, setCar_id] = useState<number | null>(null);
+  const [refuelsLoading, setRefuelsLoading] = useState(true);
 
   const styles = styling(colors);
 
   useEffect(() => {
     handleGettingData();
+    getRefuels();
     getLatestPedo();
     setCarID();
   }, []);
@@ -42,6 +47,18 @@ export default function Page() {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     router.replace("/login");
+  };
+
+  const getRefuels = async () => {
+    const { data, error } = await supabase
+      .from("entries")
+      .select("date, fuel_litre, total_cost, id")
+      .order("date", { ascending: false })
+      .limit(3);
+
+    if (error) throw new Error("failed at loading entries refuels");
+    setRefuelData(data);
+    setRefuelsLoading(false);
   };
 
   const getLatestPedo = async () => {
@@ -76,11 +93,23 @@ export default function Page() {
     }
 
     setLoading(false);
+    setRefreshing(false);
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={{ paddingHorizontal: 24 }}>
+      <ScrollView
+        style={{ paddingHorizontal: 24 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => {
+              setLoading(true);
+              handleGettingData(), getLatestPedo();
+            }}
+          />
+        }
+      >
         <View style={styles.bar}>
           <TouchableOpacity onPress={handleLogout}>
             <MaterialIcons
@@ -91,7 +120,7 @@ export default function Page() {
           </TouchableOpacity>
         </View>
         {isLoading ? <Loading /> : data && <SummaryGrid data={data} />}
-        <RecentRefules />
+        <RecentRefules refules={refuelData} isLoading={refuelsLoading} />
       </ScrollView>
       <Button
         title="New entry"

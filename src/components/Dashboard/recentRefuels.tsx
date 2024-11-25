@@ -13,32 +13,19 @@ export type Refule = {
   id: number;
 };
 
-export default function RecentRefules() {
-  const [data, setData] = useState<Refule[] | null>(null);
-  const [isLoading, setLoading] = useState(true);
-
+export default function RecentRefules({
+  isLoading,
+  refules,
+}: {
+  isLoading: boolean;
+  refules: Refule[] | null;
+}) {
   const color = useContext(ThemeContext);
   const s = styling(color);
 
-  const getRefuels = async () => {
-    const { data, error } = await supabase
-      .from("entries")
-      .select("date, fuel_litre, total_cost, id")
-      .order("date", { ascending: false })
-      .limit(3);
-
-    if (error) throw new Error("failed at loading entries: " + error.message);
-
-    setData(data);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    getRefuels();
-  }, []);
-
   if (isLoading)
     return (
+      // TODO Fix Skeleton
       <View>
         <Skeleton className="w-1/5 h-4 pb-4" />
         <Skeleton className="w-full h-10 pb-2" />
@@ -46,7 +33,7 @@ export default function RecentRefules() {
         <Skeleton className="w-full h-10" />
       </View>
     );
-  else if (data && data?.length > 0)
+  else if (refules && refules?.length > 0)
     return (
       <View style={{ flexDirection: "column", gap: 16 }}>
         <View
@@ -63,8 +50,12 @@ export default function RecentRefules() {
           </Link>
         </View>
         <View style={s.list}>
-          {data.map((item, index) => (
-            <Item item={item} key={item.id} last={index === data.length - 1} />
+          {refules.map((item, index) => (
+            <Item
+              item={item}
+              key={item.id}
+              last={index === refules.length - 1}
+            />
           ))}
         </View>
       </View>
