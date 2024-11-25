@@ -23,7 +23,7 @@ import Button from "../components/button/button";
 export default function Page() {
   const colors = useContext(ThemeContext);
   const [isLoading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [latestPedo, setLatestPedo] = useState(0);
   const [data, setData] = useState<DashboardData | null>(null);
   const [refuelData, setRefuelData] = useState<Refule[] | null>(null);
