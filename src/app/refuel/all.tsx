@@ -29,7 +29,6 @@ export default function All() {
       .order("date", { ascending: false })
       .limit(100);
 
-    console.log(data, error);
     if (error) throw new Error("Loading refuels failed.");
 
     setData(data);
