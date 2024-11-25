@@ -14,15 +14,24 @@ import {
 export default function RootLayout() {
   const color = useColorScheme();
   const [session, setSession] = useState<Session | null>(null);
+  const [isloading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log(session);
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      setLoading(false);
     });
 
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
+  }, []);
+
+  useEffect(() => {
+    if (isloading) return;
+
+    if (!session) router.replace("/login");
 
     supabase
       .from("cars")
@@ -32,8 +41,6 @@ export default function RootLayout() {
           router.replace("/setup");
         }
       });
-
-    router.replace("/login");
   }, []);
 
   return (
