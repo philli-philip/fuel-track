@@ -17,7 +17,6 @@ export default function RootLayout() {
   const [isloading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log(session);
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setLoading(false);

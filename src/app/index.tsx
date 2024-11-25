@@ -8,17 +8,18 @@ import {
   RefreshControl,
 } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { supabase } from "../utils/supabase/supabase";
 import { Loading } from "../components/Dashboard/loading";
 import { Theme, ThemeContext } from "../utils/colors/colors";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { DashboardData, getDashboardData } from "../actions/entryActions";
 import { SummaryGrid } from "../components/Dashboard/Summary";
 import { getCarID } from "../actions/carActions";
 import RecentRefules, { Refule } from "../components/Dashboard/recentRefuels";
 import Button from "../components/button/button";
+import React from "react";
 
 export default function Page() {
   const colors = useContext(ThemeContext);
@@ -38,6 +39,13 @@ export default function Page() {
     getLatestPedo();
     setCarID();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      getRefuels();
+      handleGettingData();
+    }, [])
+  );
 
   const setCarID = async () => {
     const carID = await getCarID();

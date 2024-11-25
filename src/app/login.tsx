@@ -1,13 +1,10 @@
 import React, { useContext, useRef, useState } from "react";
 import {
   Alert,
-  View,
   AppState,
   TextInput,
   Image,
   StyleSheet,
-  Pressable,
-  Text,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
