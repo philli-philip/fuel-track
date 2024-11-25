@@ -26,11 +26,11 @@ export default function RecentRefules({
   if (isLoading)
     return (
       // TODO Fix Skeleton
-      <View>
-        <Skeleton className="w-1/5 h-4 pb-4" />
-        <Skeleton className="w-full h-10 pb-2" />
-        <Skeleton className="w-full h-10 pb-2" />
-        <Skeleton className="w-full h-10" />
+      <View style={{ flex: 0, flexDirection: "column", gap: 32 }}>
+        <Skeleton style={{ width: "20%", height: 12, paddingBottom: 16 }} />
+        <Skeleton style={{ height: 40 }} />
+        <Skeleton style={{ height: 40 }} />
+        <Skeleton style={{ height: 40 }} />
       </View>
     );
   else if (refules && refules?.length > 0)

@@ -50,6 +50,7 @@ export default function Page() {
   };
 
   const getRefuels = async () => {
+    setRefuelsLoading(true);
     const { data, error } = await supabase
       .from("entries")
       .select("date, fuel_litre, total_cost, id")
@@ -76,6 +77,7 @@ export default function Page() {
   };
 
   const handleGettingData = async () => {
+    setLoading(true);
     const data = await getDashboardData();
 
     if (!data) {
@@ -104,8 +106,8 @@ export default function Page() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={() => {
-              setLoading(true);
               handleGettingData(), getLatestPedo();
+              getRefuels();
             }}
           />
         }
@@ -119,12 +121,20 @@ export default function Page() {
             />
           </TouchableOpacity>
         </View>
-        {isLoading ? <Loading /> : data && <SummaryGrid data={data} />}
+        {isLoading && <Loading />}
+
+        {!isLoading && data && <SummaryGrid data={data} />}
         <RecentRefules refules={refuelData} isLoading={refuelsLoading} />
       </ScrollView>
       <Button
         title="New entry"
-        containerStyle={{ position: "absolute", bottom: 72, right: 24 }}
+        containerStyle={{
+          position: "absolute",
+          bottom: 72,
+          right: 16,
+          paddingHorizontal: 32,
+          paddingVertical: 16,
+        }}
         onPress={() =>
           router.push({
             pathname: "/newEntry",
