@@ -15,10 +15,16 @@ type ButtonProps = {
   title: string;
   containerStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
-  color?: "primary" | "error";
+  color?: "primary" | "error" | "neutral";
   variant?: "solid" | "soft";
 };
 
+/**
+ *
+ * @param color Primary, Errror
+ * @param variant Solid, Soft
+ * @returns
+ */
 const Button: React.FC<ButtonProps & TouchableOpacityProps> = ({
   title,
   onPress,
@@ -78,21 +84,34 @@ const Button: React.FC<ButtonProps & TouchableOpacityProps> = ({
     },
   });
 
-  const stl = {
+  const solidNeutral = StyleSheet.create({
+    button: {
+      backgroundColor: colors.bg.input,
+    },
+    text: { color: colors.text.primary },
+  });
+
+  const buttonStyle = {
     solid: {
       primary: solidPrimary,
       error: solidError,
       disabled: solidDisabled,
+      neutral: solidNeutral,
     },
-    soft: { primary: softPrimary, error: softError, disabled: solidDisabled },
+    soft: {
+      primary: softPrimary,
+      error: softError,
+      disabled: solidDisabled,
+      neutral: solidNeutral,
+    },
   };
 
   return (
     <TouchableOpacity
       style={[
         styles.button,
-        stl[variant][color].button,
-        props.disabled && stl[variant]["disabled"].button,
+        buttonStyle[variant][color].button,
+        props.disabled && buttonStyle[variant]["disabled"].button,
         containerStyle,
       ]}
       onPress={onPress}
@@ -101,8 +120,8 @@ const Button: React.FC<ButtonProps & TouchableOpacityProps> = ({
       <Text
         style={[
           styles.text,
-          stl[variant][color].text,
-          props.disabled && stl[variant]["disabled"].text,
+          buttonStyle[variant][color].text,
+          props.disabled && buttonStyle[variant]["disabled"].text,
           ,
           textStyle,
         ]}
