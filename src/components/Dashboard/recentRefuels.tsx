@@ -1,6 +1,5 @@
-import { supabase } from "@/src/utils/supabase/supabase";
 import { Link } from "expo-router";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Skeleton } from "../skeleton/skeleton";
 import { Theme, ThemeContext } from "@/src/utils/colors/colors";
@@ -27,7 +26,6 @@ export default function RecentRefules({
 
   if (isLoading)
     return (
-      // TODO Fix Skeleton
       <View style={{ flex: 0, flexDirection: "column", gap: 32 }}>
         <Skeleton style={{ width: "20%", height: 12, paddingBottom: 16 }} />
         <Skeleton style={{ height: 40 }} />
