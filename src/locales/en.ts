@@ -22,4 +22,9 @@ export const en = {
     deleteCancel: "Cancel",
     deleteConfirm: "Delete",
   },
+  login: {
+    password: "Password",
+    emailPlaceholder: "email@address.com",
+    login: "Log in",
+  },
 };

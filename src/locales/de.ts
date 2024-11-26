@@ -24,4 +24,9 @@ export const de: typeof en = {
     deleteCancel: "Abbrechen",
     deleteConfirm: "Löschen",
   },
+  login: {
+    password: "Passwort",
+    emailPlaceholder: "email@adresse.de",
+    login: "Einloggen",
+  },
 };

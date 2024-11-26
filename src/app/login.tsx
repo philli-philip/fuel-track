@@ -12,6 +12,7 @@ import { router } from "expo-router";
 import { supabase } from "@/src/utils/supabase/supabase";
 import { Theme, ThemeContext } from "@/src/utils/colors/colors";
 import Button from "../components/button/button";
+import { useTranslation } from "react-i18next";
 
 // Tells Supabase Auth to continuously refresh the session automatically if
 // the app is in the foreground. When this is added, you will continue to receive
@@ -31,6 +32,7 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const emailField = useRef<TextInput>(null);
+  const { t } = useTranslation("translation", { keyPrefix: "login" });
 
   async function signInWithEmail() {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -58,7 +60,7 @@ export default function Auth() {
       <TextInput
         onChangeText={(text) => setEmail(text)}
         value={email}
-        placeholder="email@address.com"
+        placeholder={t("emailPlaceholder")}
         autoCapitalize="none"
         style={style.input}
         placeholderTextColor={colors.text.light}
@@ -71,7 +73,7 @@ export default function Auth() {
         value={password}
         secureTextEntry={true}
         style={style.input}
-        placeholder="Password"
+        placeholder={t("password")}
         autoCapitalize={"none"}
         placeholderTextColor={colors.text.light}
         onSubmitEditing={() => signInWithEmail()}
@@ -79,7 +81,7 @@ export default function Auth() {
         ref={emailField}
       />
       <Button
-        title="Sign in"
+        title={t("login")}
         onPress={() => signInWithEmail()}
         containerStyle={{ marginLeft: "auto" }}
       />
