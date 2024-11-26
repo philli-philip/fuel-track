@@ -200,6 +200,7 @@ const Overlay = ({
             bottom: 0,
             flex: 1,
             width: "100%",
+            zIndex: 2,
           }}
         >
           <View
