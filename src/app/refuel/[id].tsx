@@ -7,13 +7,14 @@ import {
 } from "@/src/utils/formatting/formatting";
 import { supabase } from "@/src/utils/supabase/supabase";
 import { router, useLocalSearchParams } from "expo-router";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useTransition } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Theme, ThemeContext } from "@/src/utils/colors/colors";
 import Button from "@/src/components/button/button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Skeleton } from "@/src/components/skeleton/skeleton";
+import { useTranslation } from "react-i18next";
 
 const deleteEntry = async (id: number | string) => {
   const { error } = await supabase.from("entries").delete().eq("id", id);
@@ -36,6 +37,7 @@ type Entry = {
 
 export default function Page() {
   const { id } = useLocalSearchParams();
+  const { t } = useTranslation(undefined, { keyPrefix: "details" });
   const [entry, setEntry] = useState<Entry | null>(null);
   const [isLoading, setLoading] = useState(true);
 
@@ -88,17 +90,17 @@ export default function Page() {
         <View style={style.container}>
           <View style={style.row}>
             <View style={style.valueGroup}>
-              <Text style={style.label}>Total price</Text>
+              <Text style={style.label}>{t("totalPrice")}</Text>
               <Text style={style.value}>{formatEuro(entry.total_cost)}</Text>
             </View>
             <View style={style.valueGroup}>
-              <Text style={style.label}>Fuel added</Text>
+              <Text style={style.label}>{t("fuelAdded")}</Text>
               <Text style={style.value}>{formatLitre(entry.fuel_litre)}</Text>
             </View>
           </View>
           <View style={style.row}>
             <View style={style.valueGroup}>
-              <Text style={style.label}>km added</Text>
+              <Text style={style.label}>{t("kmAdded")}</Text>
               <Text style={style.value}>{formatKM(entry.km_added)}</Text>
               <Text style={style.label}>
                 {formatKM(entry.startingPedo) +
@@ -107,7 +109,7 @@ export default function Page() {
               </Text>
             </View>
             <View style={style.valueGroup}>
-              <Text style={style.label}>Price per liter</Text>
+              <Text style={style.label}>{t("pricePerLiter")}</Text>
               <Text style={style.value}>
                 {formatEurPerLitre(entry.fuel_price)}
               </Text>
@@ -115,7 +117,7 @@ export default function Page() {
           </View>
         </View>
         <Button
-          title="Delete"
+          title={t("delete")}
           color="error"
           variant="soft"
           onPress={() => setOpen(true)}
@@ -177,6 +179,7 @@ const Overlay = ({
   onClose: () => void;
 }) => {
   const color = useContext(ThemeContext);
+  const { t } = useTranslation("translation", { keyPrefix: "details" });
 
   if (open)
     return (
@@ -221,19 +224,19 @@ const Overlay = ({
                 paddingBottom: 16,
               }}
             >
-              Do you want to delete the entry?
+              {t("deleteTitle")}
             </Text>
             <Button
               variant="solid"
               color="neutral"
-              title="Cancel"
+              title={t("deleteCancel")}
               textStyle={{ fontWeight: 700 }}
               onPress={onClose}
             />
             <Button
               variant="solid"
               color="error"
-              title="Delete"
+              title={t("deleteConfirm")}
               textStyle={{ fontWeight: 700 }}
               onPress={() => deleteEntry(id)}
             />

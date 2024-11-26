@@ -5,6 +5,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { Skeleton } from "../skeleton/skeleton";
 import { Theme, ThemeContext } from "@/src/utils/colors/colors";
 import { Item } from "./Entry";
+import { useTranslation } from "react-i18next";
 
 export type Refule = {
   date: string;
@@ -22,6 +23,7 @@ export default function RecentRefules({
 }) {
   const color = useContext(ThemeContext);
   const s = styling(color);
+  const { t } = useTranslation(undefined, { keyPrefix: "refuelList" });
 
   if (isLoading)
     return (
@@ -44,9 +46,9 @@ export default function RecentRefules({
             paddingHorizontal: 4,
           }}
         >
-          <Text style={s.title}>Recent refules</Text>
+          <Text style={s.title}>{t("title")}</Text>
           <Link href="/refuel/all">
-            <Text style={s.link}>All entries</Text>
+            <Text style={s.link}>{t("link")}</Text>
           </Link>
         </View>
         <View style={s.list}>

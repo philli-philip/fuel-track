@@ -18,6 +18,7 @@ import RecentRefules, { Refule } from "../components/Dashboard/recentRefuels";
 import Button from "../components/button/button";
 import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
 
 export default function Page() {
   const colors = useContext(ThemeContext);
@@ -29,6 +30,7 @@ export default function Page() {
   const [car_id, setCar_id] = useState<number | null>(null);
   const [refuelsLoading, setRefuelsLoading] = useState(true);
   const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
 
   const styles = styling(colors);
 
@@ -134,7 +136,7 @@ export default function Page() {
         <RecentRefules refules={refuelData} isLoading={refuelsLoading} />
       </ScrollView>
       <Button
-        title="New entry"
+        title={t("dashboard.create")}
         containerStyle={{
           position: "absolute",
           bottom: 72,

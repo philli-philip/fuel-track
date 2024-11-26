@@ -15,11 +15,13 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Item } from "@/src/components/Dashboard/Entry";
+import { useTranslation } from "react-i18next";
 
 export default function All() {
   const [data, setData] = useState<Refule[] | null>(null);
   const [isLoading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const { t } = useTranslation(undefined, { keyPrefix: "refuelList" });
 
   const color = useContext(ThemeContext);
   const style = styling(color);
@@ -83,7 +85,7 @@ export default function All() {
             }}
           />
         </TouchableOpacity>
-        <Text style={style.title}>Recent refules</Text>
+        <Text style={style.title}>{t("title")}</Text>
       </View>
       {isLoading && <Loading />}
       {!isLoading && data && (

@@ -3,6 +3,7 @@ import { router, Stack } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { SessionContext, supabase } from "../utils/supabase/supabase";
 import { Session } from "@supabase/supabase-js";
+import i18n from "../utils/translation/translation";
 
 import { Platform, useColorScheme } from "react-native";
 import {
@@ -14,6 +15,9 @@ import * as NavigationBar from "expo-navigation-bar";
 import * as StatusBar from "expo-status-bar";
 
 export default function RootLayout() {
+  // Initialise translations
+  i18n();
+
   const color = useColorScheme();
   const [session, setSession] = useState<Session | null>(null);
   const [isloading, setLoading] = useState(true);

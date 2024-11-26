@@ -1,41 +1,43 @@
 import { DashboardData } from "@/src/actions/entryActions";
 import { Theme, ThemeContext } from "@/src/utils/colors/colors";
 import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { View, StyleSheet, Text } from "react-native";
 
 export const SummaryGrid = ({ data }: { data: DashboardData }) => {
   const colors = useContext(ThemeContext);
   const styles = styling(colors);
+  const { t } = useTranslation(undefined, { keyPrefix: "dashboard" });
 
   return (
     <>
       <View style={styles.row}>
         <View style={styles.group}>
-          <Text style={styles.label}>Price per 100km</Text>
+          <Text style={styles.label}>{t("pricePer100")}</Text>
           <Text style={styles.value}>{data.pricePer100?.toFixed(2)} €</Text>
         </View>
         <View style={styles.group}>
-          <Text style={styles.label}>Price per 1km</Text>
+          <Text style={styles.label}>{t("pricePer1")}</Text>
           <Text style={styles.value}>{data.pricePer1?.toFixed(2)} €</Text>
         </View>
       </View>
       <View style={styles.row}>
         <View style={styles.group}>
-          <Text style={styles.label}>km tracked</Text>
+          <Text style={styles.label}>{t("totalKm")}</Text>
           <Text style={styles.value}>{data.totalKm} km</Text>
         </View>
         <View style={styles.group}>
-          <Text style={styles.label}>Total fuel</Text>
+          <Text style={styles.label}>{t("totalFuel")}</Text>
           <Text style={styles.value}>{data.totalFuel?.toFixed(2)} litre</Text>
         </View>
       </View>
       <View style={styles.row}>
         <View style={styles.group}>
-          <Text style={styles.label}>Total spent</Text>
+          <Text style={styles.label}>{t("totalCost")}</Text>
           <Text style={styles.value}>{data.totalCost?.toFixed(2)} €</Text>
         </View>
         <View style={styles.group}>
-          <Text style={styles.label}>Average price</Text>
+          <Text style={styles.label}>{t("avgPrice")}</Text>
           <Text style={styles.value}>
             {data.averagePricePerLitre?.toFixed(2)} €/l
           </Text>
