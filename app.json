@@ -2,7 +2,7 @@
   "expo": {
     "name": "fuel-track",
     "slug": "fuel-track",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -15,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": false,
-      "buildNumber": "4",
+      "buildNumber": "5",
       "bundleIdentifier": "com.fliip.fueltrack",
       "config": {
         "usesNonExemptEncryption": false
