@@ -4,9 +4,9 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
-  StyleProp,
-  ViewStyle,
-  TextStyle,
+  type StyleProp,
+  type ViewStyle,
+  type TextStyle,
   useColorScheme,
   TouchableOpacityProps,
 } from "react-native";
@@ -21,9 +21,8 @@ type ButtonProps = {
 
 /**
  *
- * @param color Primary, Errror
- * @param variant Solid, Soft
- * @returns
+ * @param color "primary", "error"
+ * @param variant "solid", "soft"
  */
 const Button: React.FC<ButtonProps & TouchableOpacityProps> = ({
   title,
@@ -32,77 +31,40 @@ const Button: React.FC<ButtonProps & TouchableOpacityProps> = ({
   textStyle,
   color = "primary",
   variant = "solid",
+  disabled,
   ...props
 }) => {
   const theme = useColorScheme();
   const colors = useContext(ThemeContext);
   const styles = styling(colors);
 
-  const solidPrimary = StyleSheet.create({
-    button: {
-      backgroundColor: colors.bg.accent,
-    },
-    text: {
-      color: colors.text.inverted,
-    },
-  });
-
-  const solidError = StyleSheet.create({
-    button: {
-      backgroundColor: colors.bg.error,
-    },
-    text: {
-      color: colors.text.inverted,
-    },
-  });
-
-  const solidDisabled = StyleSheet.create({
-    button: {
-      backgroundColor: colors.bg.input,
-    },
-    text: {
-      color: colors.text.light,
-    },
-  });
-
-  const softError = StyleSheet.create({
-    button: {
-      backgroundColor: theme === "light" ? "#F6C3C3" : "#2E090A",
-    },
-    text: {
-      color: colors.text.error,
-    },
-  });
-
-  const softPrimary = StyleSheet.create({
-    button: {
-      backgroundColor: colors.bg.accent,
-      opacity: 0.4,
-    },
-    text: {
-      color: colors.text.accent,
-    },
-  });
-
-  const solidNeutral = StyleSheet.create({
-    button: {
-      backgroundColor: colors.bg.input,
-    },
-    text: { color: colors.text.primary },
-  });
-
-  const buttonStyle = {
-    solid: {
-      primary: solidPrimary,
-      error: solidError,
-      disabled: solidDisabled,
-      neutral: solidNeutral,
-    },
+  const btnContainer = {
     soft: {
-      primary: softPrimary,
-      error: softError,
-      disabled: solidDisabled,
-      neutral: solidNeutral,
+      error: { backgroundColor: theme === "light" ? "#F6C3C3" : "#2E090A" },
+      primary: { backgroundColor: colors.bg.accent },
+      disabled: { backgroundColor: colors.bg.input },
+      neutral: { backgroundColor: colors.bg.input },
+    },
+    solid: {
+      error: { backgroundColor: colors.bg.error },
+      primary: { backgroundColor: colors.bg.accent },
+      disabled: { backgroundColor: colors.bg.input },
+      neutral: { backgroundColor: colors.bg.input },
+    },
+  };
+
+  const btnText = {
+    soft: {
+      error: { color: colors.text.error },
+      primary: { color: colors.text.accent },
+      disabled: { color: colors.text.light },
+      neutral: { color: colors.text.primary },
+    },
+    solid: {
+      error: { color: colors.text.inverted },
+      primary: { color: colors.text.inverted },
+      disabled: { color: colors.text.light },
+      neutral: { color: colors.text.secondary },
     },
   };
 
@@ -110,8 +72,8 @@ const Button: React.FC<ButtonProps & TouchableOpacityProps> = ({
     <TouchableOpacity
       style={[
         styles.button,
-        buttonStyle[variant][color].button,
-        props.disabled && buttonStyle[variant]["disabled"].button,
+        btnContainer[variant][color],
+        disabled && btnContainer[variant]["disabled"],
         containerStyle,
       ]}
       onPress={onPress}
@@ -120,9 +82,8 @@ const Button: React.FC<ButtonProps & TouchableOpacityProps> = ({
       <Text
         style={[
           styles.text,
-          buttonStyle[variant][color].text,
-          props.disabled && buttonStyle[variant]["disabled"].text,
-          ,
+          btnText[variant][color],
+          disabled && btnText[variant]["disabled"],
           textStyle,
         ]}
       >
@@ -137,13 +98,12 @@ const styling = (theme: Theme) =>
     button: {
       paddingVertical: 12,
       paddingHorizontal: 24,
-      borderRadius: 12,
+      borderRadius: 8,
       alignItems: "center",
-      backgroundColor: theme.bg.accent,
     },
     text: {
       fontSize: 16,
-      color: theme.text.inverted,
+      fontWeight: 600,
     },
   });
 
