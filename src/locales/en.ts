@@ -20,7 +20,7 @@ export const en = {
     kmAdded: "Km Added",
     pricePerLiter: "Price per liter fuel",
     delete: "Delete",
-    deleteTitle: "Do you want to delete the entry?",
+    deleteTitle: "Delete the entry permanently?",
     deleteCancel: "Cancel",
     deleteConfirm: "Delete",
   },

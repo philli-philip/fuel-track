@@ -22,7 +22,7 @@ export const de: typeof en = {
     kmAdded: "Km geschrieben",
     pricePerLiter: "Preis pro Liter",
     delete: "Löschen",
-    deleteTitle: "Möchtest du den Eintrag permanent löschen?",
+    deleteTitle: "Eintrag permanent löschen?",
     deleteCancel: "Abbrechen",
     deleteConfirm: "Löschen",
   },
