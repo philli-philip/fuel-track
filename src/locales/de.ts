@@ -12,7 +12,9 @@ export const de: typeof en = {
   },
   refuelList: {
     title: "Letzte Tankungen",
-    link: "All Tankungen",
+    link: "Alle Tankungen",
+    noEntries: "Keine Einträge",
+    noEntriesHint: "Füge den ersten Eintrag übers Dashboard hinzu.",
   },
   details: {
     totalPrice: "Summe",
@@ -28,5 +30,15 @@ export const de: typeof en = {
     password: "Passwort",
     emailPlaceholder: "email@adresse.de",
     login: "Einloggen",
+  },
+  newEntry: {
+    title: "Neuer Entrag",
+    create: "Erstellen",
+    addedFuel: "Liter getankt",
+    newPedo: "Neuer Kilometerstand",
+    date: "Datum",
+    fuelPrice: "Preis pro Liter",
+    fuelPriceHint: "{{price}}€ für diese Auffüllung?",
+    errorNegativePedo: "",
   },
 };

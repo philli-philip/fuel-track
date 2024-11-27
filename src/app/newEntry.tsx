@@ -17,6 +17,7 @@ import { createEntry } from "../actions/entryActions";
 import { router, useLocalSearchParams } from "expo-router";
 import Button from "../components/button/button";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useTranslation } from "react-i18next";
 
 export default function newEntry() {
   const colors = useContext(ThemeContext);
@@ -35,6 +36,7 @@ export default function newEntry() {
   const pedoRef = useRef<TextInput | null>(null);
   const fuelAmountRef = useRef<TextInput | null>(null);
   const fuelPriceRef = useRef<TextInput | null>(null);
+  const { t } = useTranslation("translation", { keyPrefix: "newEntry" });
   const dateFormater = new Intl.DateTimeFormat("de-DE", {
     dateStyle: "long",
   });
@@ -80,12 +82,12 @@ export default function newEntry() {
                 }}
               />
             </TouchableOpacity>
-            <Text style={styles.title}>New Entry</Text>
+            <Text style={styles.title}>{t("title")}</Text>
           </View>
           <ScrollView style={{ flex: 1 }}>
             <View style={styles.container}>
               <View style={styles.group}>
-                <Text style={styles.label}>Date</Text>
+                <Text style={styles.label}>{t("date")}</Text>
                 {Platform.OS !== "ios" && (
                   <TouchableOpacity onPress={() => setOpen(true)}>
                     <Text style={styles.value}>
@@ -113,7 +115,7 @@ export default function newEntry() {
                   ))}
               </View>
               <View style={styles.group}>
-                <Text style={styles.label}>New pedometer value</Text>
+                <Text style={styles.label}>{t("newPedo")}</Text>
                 <View style={styles.inputRow}>
                   <TextInput
                     ref={pedoRef}
@@ -138,12 +140,12 @@ export default function newEntry() {
                 )}
                 {pedo && drivenKM < 0 && (
                   <Text style={styles.noteAlert}>
-                    You cannot deduct from your pedometer
+                    {t("errorNegativePedo")}{" "}
                   </Text>
                 )}
               </View>
               <View style={styles.group}>
-                <Text style={styles.label}>Added fuel</Text>
+                <Text style={styles.label}>{t("addedFuel")}</Text>
                 <View style={styles.inputRow}>
                   <TextInput
                     style={styles.value}
@@ -164,7 +166,7 @@ export default function newEntry() {
                 </View>
               </View>
               <View style={styles.group}>
-                <Text style={styles.label}>Fuel price</Text>
+                <Text style={styles.label}>{t("fuelPrice")}</Text>
                 <View style={styles.inputRow}>
                   <TextInput
                     style={styles.value}
@@ -180,14 +182,14 @@ export default function newEntry() {
                   </Pressable>
                 </View>
                 <Text style={styles.note}>
-                  {total_cost.toFixed(2)}€ for this refeuling?
+                  {t("fuelPriceHint", { price: total_cost.toFixed(2) })}
                 </Text>
               </View>
             </View>
           </ScrollView>
           {carID && (
             <Button
-              title="Create new"
+              title={t("create")}
               containerStyle={{
                 position: "absolute",
                 right: 24,
@@ -232,6 +234,7 @@ const styling = (theme: Theme) =>
     group: {
       paddingBottom: 48,
       paddingHorizontal: 24,
+      gap: 8,
     },
     form: {
       flex: 1,
@@ -240,7 +243,7 @@ const styling = (theme: Theme) =>
     },
     inputRow: {
       flexDirection: "row",
-      gap: 2,
+      gap: 4,
       alignItems: "center",
     },
     title: {

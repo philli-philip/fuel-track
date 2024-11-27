@@ -11,6 +11,8 @@ export const en = {
   refuelList: {
     title: "Recent refules",
     link: "All refules",
+    noEntries: "No Entries yet",
+    noEntriesHint: "Add you first entry from the Dashboard.",
   },
   details: {
     totalPrice: "Cost of refuel",
@@ -26,5 +28,15 @@ export const en = {
     password: "Password",
     emailPlaceholder: "email@address.com",
     login: "Log in",
+  },
+  newEntry: {
+    title: "New entry",
+    create: "Create new",
+    addedFuel: "Added fuel",
+    fuelPrice: "Fuel price",
+    fuelPriceHint: "{{price}}€ for this refueling?",
+    newPedo: "New pedometer value",
+    errorNegativePedo: "You cannot deduct from your pedometer",
+    date: "Date",
   },
 };
