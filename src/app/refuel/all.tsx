@@ -2,8 +2,8 @@ import { Refule } from "@/src/components/Dashboard/recentRefuels";
 import { Skeleton } from "@/src/components/skeleton/skeleton";
 import { Theme, ThemeContext } from "@/src/utils/colors/colors";
 import { supabase } from "@/src/utils/supabase/supabase";
-import { router } from "expo-router";
-import { useContext, useEffect, useState } from "react";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -16,6 +16,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Item } from "@/src/components/Dashboard/Entry";
 import { useTranslation } from "react-i18next";
+import { Message } from "@/src/components/message/message";
 
 export default function All() {
   const [data, setData] = useState<Refule[] | null>(null);
@@ -26,6 +27,12 @@ export default function All() {
   const color = useContext(ThemeContext);
   const style = styling(color);
   const insets = useSafeAreaInsets();
+
+  useFocusEffect(
+    useCallback(() => {
+      getRefuels();
+    }, [])
+  );
 
   const getRefuels = async () => {
     setLoading(true);
@@ -47,7 +54,7 @@ export default function All() {
   }, []);
 
   const Loading = () => (
-    <View>
+    <View style={{ flex: 1, flexDirection: "column", gap: 32, paddingTop: 32 }}>
       <Skeleton style={style.skeleton} />
       <Skeleton style={style.skeleton} />
       <Skeleton style={style.skeleton} />
@@ -62,6 +69,7 @@ export default function All() {
   return (
     <ScrollView
       style={[style.container, { paddingTop: insets.top }]}
+      contentContainerStyle={{ flex: 1 }}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={getRefuels} />
       }
@@ -88,7 +96,10 @@ export default function All() {
         <Text style={style.title}>{t("title")}</Text>
       </View>
       {isLoading && <Loading />}
-      {!isLoading && data && (
+      {!isLoading && data?.length === 0 && (
+        <Message title={t("noEntries")} description={t("noEntriesHint")} />
+      )}
+      {!isLoading && data && data.length > 0 && (
         <View style={{ flex: 1, flexDirection: "column", paddingBottom: 144 }}>
           <View style={style.list} key={21}>
             {data.map((item, index) => (
@@ -117,6 +128,7 @@ const styling = (theme: Theme) =>
       flex: 1,
       paddingHorizontal: 16,
       gap: 16,
+      flexDirection: "column",
     },
     list: {
       borderWidth: 1,

@@ -5,6 +5,7 @@ import { Skeleton } from "../skeleton/skeleton";
 import { Theme, ThemeContext } from "@/src/utils/colors/colors";
 import { Item } from "./Entry";
 import { useTranslation } from "react-i18next";
+import { Message } from "../message/message";
 
 export type Refule = {
   date: string;
@@ -33,22 +34,23 @@ export default function RecentRefules({
         <Skeleton style={{ height: 40 }} />
       </View>
     );
-  else if (refules && refules?.length > 0)
-    return (
-      <View style={{ flexDirection: "column", gap: 16 }}>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            paddingHorizontal: 4,
-          }}
-        >
-          <Text style={s.title}>{t("title")}</Text>
-          <Link href="/refuel/all">
-            <Text style={s.link}>{t("link")}</Text>
-          </Link>
-        </View>
+  return (
+    <View style={{ flexDirection: "column", gap: 16 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingHorizontal: 4,
+        }}
+      >
+        <Text style={s.title}>{t("title")}</Text>
+        <Link href="/refuel/all">
+          <Text style={s.link}>{t("link")}</Text>
+        </Link>
+      </View>
+      {refules?.length === 0 && <Message title={t("noEntries")} />}
+      {refules && refules?.length > 0 && (
         <View style={s.list}>
           {refules.map((item, index) => (
             <Item
@@ -58,8 +60,9 @@ export default function RecentRefules({
             />
           ))}
         </View>
-      </View>
-    );
+      )}
+    </View>
+  );
 }
 
 const styling = (theme: Theme) =>
