@@ -14,16 +14,13 @@ import * as NavigationBar from "expo-navigation-bar";
 import * as StatusBar from "expo-status-bar";
 
 export default function RootLayout() {
-  // Initialise translations
-  useEffect(() => {
-    init18n();
-  }, []);
-
   const color = useColorScheme();
   const [session, setSession] = useState<Session | null>(null);
   const [isloading, setLoading] = useState(true);
 
   const bg = color === "dark" ? darkColors.bg.default : lightColors.bg.default;
+
+  init18n();
 
   useEffect(() => {
     if (Platform.OS == "android") {

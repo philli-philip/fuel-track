@@ -11,10 +11,12 @@ import { useContext, useState } from "react";
 import { createCar } from "../actions/carActions";
 import Button from "../components/button/button";
 import { Theme, ThemeContext } from "../utils/colors/colors";
+import { useTranslation } from "react-i18next";
 
 export default function Setup() {
   const [carName, setCarName] = useState("");
   const [pedometer, setPedometer] = useState(0);
+  const { t } = useTranslation("translation", { keyPrefix: "setup" });
 
   const disabled = carName === "" ? true : false;
 
@@ -69,14 +71,14 @@ export default function Setup() {
               flexDirection: "row",
             }}
           >
-            <Text style={s.title}>Setup your car</Text>
+            <Text style={s.title}>{t("title")}</Text>
           </View>
           <View style={s.form}>
             <View style={s.group}>
-              <Text style={s.label}>Name of your car</Text>
+              <Text style={s.label}>{t("name")}</Text>
               <TextInput
                 style={s.input}
-                placeholder="Name your car"
+                placeholder={t("namePlaceholder")}
                 onChangeText={(e) => setCarName(e)}
                 keyboardType="default"
                 autoFocus
@@ -87,7 +89,7 @@ export default function Setup() {
               />
             </View>
             <View style={s.group}>
-              <Text style={s.label}>Current pedometer</Text>
+              <Text style={s.label}>{t("pedo")}</Text>
               <View
                 style={{
                   flexDirection: "row",

@@ -4,13 +4,15 @@ import {
   View,
   ScrollView,
   RefreshControl,
+  Pressable,
+  Text,
 } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { supabase } from "../utils/supabase/supabase";
 import { Loading } from "../components/Dashboard/loading";
 import { Theme, ThemeContext } from "../utils/colors/colors";
-import { router, useFocusEffect } from "expo-router";
+import { Link, router, useFocusEffect } from "expo-router";
 import { DashboardData, getDashboardData } from "../actions/entryActions";
 import { SummaryGrid } from "../components/Dashboard/Summary";
 import { getCarID } from "../actions/carActions";
@@ -19,12 +21,14 @@ import Button from "../components/button/button";
 import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
+import { Skeleton } from "../components/skeleton/skeleton";
 
 export default function Page() {
   const colors = useContext(ThemeContext);
   const [isLoading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [latestPedo, setLatestPedo] = useState(0);
+  const [carName, setCarName] = useState("");
   const [data, setData] = useState<DashboardData | null>(null);
   const [refuelData, setRefuelData] = useState<Refule[] | null>(null);
   const [car_id, setCar_id] = useState<number | null>(null);
@@ -50,7 +54,16 @@ export default function Page() {
 
   const setCarID = async () => {
     const carID = await getCarID();
-    setCar_id(carID ?? null);
+    const { data, error } = await supabase
+      .from("cars")
+      .select("id, name")
+      .limit(1)
+      .single();
+
+    if (data) {
+      setCar_id(data.id);
+      setCarName(data.name ?? "Unknown");
+    }
   };
 
   const handleLogout = async () => {
@@ -122,6 +135,28 @@ export default function Page() {
         }
       >
         <View style={styles.bar}>
+          <Link
+            asChild
+            href={{
+              pathname: "/edit/[id]",
+              params: { id: car_id?.toString() ?? "-1" },
+            }}
+          >
+            <Pressable style={styles.link}>
+              <Text style={styles.linkText}>
+                {isLoading ? (
+                  <Skeleton style={{ width: 40, height: 8 }} />
+                ) : (
+                  carName
+                )}
+              </Text>
+              <MaterialIcons
+                name="settings"
+                size={20}
+                color={colors.text.secondary}
+              />
+            </Pressable>
+          </Link>
           <TouchableOpacity onPress={handleLogout}>
             <MaterialIcons
               name="logout"
@@ -181,8 +216,23 @@ const styling = (theme: Theme) =>
     bar: {
       paddingTop: 24,
       paddingBottom: 24,
-      paddingHorizontal: 16,
       flexDirection: "row",
-      justifyContent: "flex-end",
+      justifyContent: "space-between",
+    },
+    link: {
+      borderRadius: 8,
+      paddingVertical: 4,
+      flexDirection: "row",
+      justifyContent: "flex-start",
+      alignItems: "center",
+      flex: undefined,
+      gap: 8,
+      flexShrink: 1,
+      flexGrow: undefined,
+      wordWrap: "no",
+      display: "flex",
+    },
+    linkText: {
+      color: theme.text.primary,
     },
   });

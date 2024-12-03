@@ -15,11 +15,15 @@ export const formatLitre = (amount: number) => {
   return liter.format(amount);
 };
 
-export const formatKM = (amount: number) => {
+export const formatKM = (
+  amount: number,
+  options?: Intl.NumberFormatOptions
+) => {
   const km = new Intl.NumberFormat("de-DE", {
-    style: "unit",
-    unit: "kilometer",
-    unitDisplay: "short",
+    style: options?.style ?? "unit",
+    unit: options?.unit ?? "kilometer",
+    unitDisplay: options?.unitDisplay ?? "short",
+    ...options,
   });
   return km.format(amount);
 };

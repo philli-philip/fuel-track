@@ -39,4 +39,19 @@ export const en = {
     errorNegativePedo: "You cannot deduct from your pedometer",
     date: "Date",
   },
+  setup: {
+    title: "Your car",
+    name: "Your cars name",
+    namePlaceholder: "Name your car",
+    pedo: "Current pedometer",
+    create: "Done!",
+  },
+  editCar: {
+    title: "$t(setup.title)",
+    name: "$t(setup.name)",
+    namePlaceholder: "$t(setup.namePlaceholder)",
+    save: "Save",
+    pedo: "Original pedometer",
+    pedoHint: "Cannot be changed to ensure correct calulcation.",
+  },
 };

@@ -41,4 +41,19 @@ export const de: typeof en = {
     fuelPriceHint: "{{price}}€ für diese Auffüllung?",
     errorNegativePedo: "",
   },
+  setup: {
+    title: "Dein Auto",
+    name: "Name des Autos",
+    namePlaceholder: "Mein Schatz",
+    pedo: "Aktueller Kilometerstand",
+    create: "Fertig!",
+  },
+  editCar: {
+    title: "$t(setup.title)",
+    name: "$t(setup.name)",
+    namePlaceholder: "$t(setup.namePlaceholder)",
+    save: "Speichern",
+    pedo: "Ursprünglicher Kilometerstand",
+    pedoHint: "Damit die Berechnung stimmt, kann es nicht geändert werden.",
+  },
 };
