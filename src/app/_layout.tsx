@@ -3,9 +3,8 @@ import { router, Stack } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { SessionContext, supabase } from "../utils/supabase/supabase";
 import { Session } from "@supabase/supabase-js";
-import i18n from "../utils/translation/translation";
-
 import { Platform, useColorScheme } from "react-native";
+import init18n from "../utils/translation/translation";
 import {
   DarkTheme,
   DefaultTheme,
@@ -16,7 +15,9 @@ import * as StatusBar from "expo-status-bar";
 
 export default function RootLayout() {
   // Initialise translations
-  i18n();
+  useEffect(() => {
+    init18n();
+  }, []);
 
   const color = useColorScheme();
   const [session, setSession] = useState<Session | null>(null);
@@ -65,6 +66,7 @@ export default function RootLayout() {
         <ThemeProvider value={color === "dark" ? DarkTheme : DefaultTheme}>
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="login" />
+            <Stack.Screen name="edit/[id]" />
             <Stack.Screen
               name="newEntry"
               options={{

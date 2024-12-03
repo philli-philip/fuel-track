@@ -17,13 +17,15 @@ declare module "i18next" {
 }
 
 const initI18n = async () => {
-  i18n.use(initReactI18next).init({
-    resources,
-    fallbackLng: "de",
-    interpolation: {
-      escapeValue: false,
-    },
-  });
+  if (!i18n.isInitialized) {
+    i18n.use(initReactI18next).init({
+      resources,
+      fallbackLng: "de",
+      interpolation: {
+        escapeValue: false,
+      },
+    });
+  }
 };
 
 export default initI18n;
