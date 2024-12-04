@@ -32,7 +32,7 @@ export const de: typeof en = {
     login: "Einloggen",
   },
   newEntry: {
-    title: "Neuer Entrag",
+    title: "Neuer Eintrag",
     create: "Erstellen",
     addedFuel: "Liter getankt",
     newPedo: "Neuer Kilometerstand",
