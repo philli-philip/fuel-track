@@ -18,6 +18,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import Button from "../components/button/button";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useTranslation } from "react-i18next";
+import Header from "../components/header/header";
 
 export default function newEntry() {
   const colors = useContext(ThemeContext);
@@ -51,8 +52,23 @@ export default function newEntry() {
     setPrice(value);
   };
 
+  const leftAction = (
+    <TouchableOpacity onPress={() => router.navigate("../")}>
+      <MaterialIcons
+        name="close"
+        size={20}
+        style={{
+          color: colors.text.primary,
+          padding: 12,
+          paddingLeft: 4,
+        }}
+      />
+    </TouchableOpacity>
+  );
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.bg.sheet }}>
+      <Header leftAction={leftAction} centerContent={t("title")} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{
@@ -70,20 +86,7 @@ export default function newEntry() {
               paddingHorizontal: 16,
               paddingBottom: 8,
             }}
-          >
-            <TouchableOpacity onPress={() => router.navigate("../")}>
-              <MaterialIcons
-                name="close"
-                size={20}
-                style={{
-                  color: colors.text.primary,
-                  padding: 12,
-                  paddingLeft: 4,
-                }}
-              />
-            </TouchableOpacity>
-            <Text style={styles.title}>{t("title")}</Text>
-          </View>
+          ></View>
           <ScrollView style={{ flex: 1 }}>
             <View style={styles.container}>
               <View style={styles.group}>

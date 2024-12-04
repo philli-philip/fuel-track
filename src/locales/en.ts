@@ -23,6 +23,7 @@ export const en = {
     deleteTitle: "Delete the entry permanently?",
     deleteCancel: "Cancel",
     deleteConfirm: "Delete",
+    notFound: "Details not found",
   },
   login: {
     password: "Password",

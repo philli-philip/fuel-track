@@ -25,6 +25,7 @@ export const de: typeof en = {
     deleteTitle: "Eintrag permanent löschen?",
     deleteCancel: "Abbrechen",
     deleteConfirm: "Löschen",
+    notFound: "Eintrag nicht gefunden.",
   },
   login: {
     password: "Passwort",

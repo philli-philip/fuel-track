@@ -7,7 +7,7 @@ import {
   Pressable,
   Text,
 } from "react-native";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import Feather from "@expo/vector-icons/Feather";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { supabase } from "../utils/supabase/supabase";
 import { Loading } from "../components/Dashboard/loading";
@@ -15,13 +15,13 @@ import { Theme, ThemeContext } from "../utils/colors/colors";
 import { Link, router, useFocusEffect } from "expo-router";
 import { DashboardData, getDashboardData } from "../actions/entryActions";
 import { SummaryGrid } from "../components/Dashboard/Summary";
-import { getCarID } from "../actions/carActions";
 import RecentRefules, { Refule } from "../components/Dashboard/recentRefuels";
 import Button from "../components/button/button";
 import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { Skeleton } from "../components/skeleton/skeleton";
+import Header from "../components/header/header";
 
 export default function Page() {
   const colors = useContext(ThemeContext);
@@ -53,7 +53,6 @@ export default function Page() {
   );
 
   const setCarID = async () => {
-    const carID = await getCarID();
     const { data, error } = await supabase
       .from("cars")
       .select("id, name")
@@ -120,8 +119,32 @@ export default function Page() {
     setRefreshing(false);
   };
 
+  const leftAction = (
+    <Link
+      asChild
+      href={{
+        pathname: "/edit/[id]",
+        params: { id: car_id?.toString() ?? "-1" },
+      }}
+    >
+      <Pressable style={styles.link}>
+        <Text style={styles.linkText}>
+          {isLoading ? <Skeleton style={{ width: 40, height: 8 }} /> : carName}
+        </Text>
+        <Feather name="settings" size={16} color={colors.text.secondary} />
+      </Pressable>
+    </Link>
+  );
+
+  const rightAction = (
+    <TouchableOpacity onPress={handleLogout}>
+      <Feather name="log-out" size={20} color={colors.text.secondary} />
+    </TouchableOpacity>
+  );
+
   return (
     <View style={{ flex: 1, flexDirection: "column" }}>
+      <Header leftAction={leftAction} rightAction={rightAction} />
       <ScrollView
         style={[styles.container, { paddingTop: insets.top }]}
         refreshControl={
@@ -134,37 +157,6 @@ export default function Page() {
           />
         }
       >
-        <View style={styles.bar}>
-          <Link
-            asChild
-            href={{
-              pathname: "/edit/[id]",
-              params: { id: car_id?.toString() ?? "-1" },
-            }}
-          >
-            <Pressable style={styles.link}>
-              <Text style={styles.linkText}>
-                {isLoading ? (
-                  <Skeleton style={{ width: 40, height: 8 }} />
-                ) : (
-                  carName
-                )}
-              </Text>
-              <MaterialIcons
-                name="settings"
-                size={20}
-                color={colors.text.secondary}
-              />
-            </Pressable>
-          </Link>
-          <TouchableOpacity onPress={handleLogout}>
-            <MaterialIcons
-              name="logout"
-              size={24}
-              color={colors.text.secondary}
-            />
-          </TouchableOpacity>
-        </View>
         {isLoading && <Loading />}
 
         {!isLoading && data && <SummaryGrid data={data} />}
@@ -176,8 +168,6 @@ export default function Page() {
           position: "absolute",
           bottom: 72,
           right: 16,
-          paddingHorizontal: 24,
-          paddingVertical: 12,
         }}
         textStyle={{ fontSize: 18, fontWeight: 700 }}
         onPress={() =>
@@ -210,8 +200,7 @@ const styling = (theme: Theme) =>
       flex: 1,
       backgroundColor: theme.bg.default,
       position: "relative",
-      paddingLeft: 24,
-      paddingRight: 24,
+      paddingHorizontal: 24,
     },
     bar: {
       paddingTop: 24,
@@ -226,13 +215,17 @@ const styling = (theme: Theme) =>
       justifyContent: "flex-start",
       alignItems: "center",
       flex: undefined,
-      gap: 8,
+      gap: 16,
       flexShrink: 1,
       flexGrow: undefined,
       wordWrap: "no",
       display: "flex",
+      backgroundColor: theme.bg.input,
+      padding: 16,
+      height: 44,
     },
     linkText: {
+      fontWeight: 400,
       color: theme.text.primary,
     },
   });

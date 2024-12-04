@@ -2,7 +2,7 @@ import { Refule } from "@/src/components/Dashboard/recentRefuels";
 import { Skeleton } from "@/src/components/skeleton/skeleton";
 import { Theme, ThemeContext } from "@/src/utils/colors/colors";
 import { supabase } from "@/src/utils/supabase/supabase";
-import { router, useFocusEffect } from "expo-router";
+import { Link, router, useFocusEffect } from "expo-router";
 import { useCallback, useContext, useEffect, useState } from "react";
 import {
   View,
@@ -13,10 +13,11 @@ import {
   RefreshControl,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import Feather from "@expo/vector-icons/Feather";
 import { Item } from "@/src/components/Dashboard/Entry";
 import { useTranslation } from "react-i18next";
 import { Message } from "@/src/components/message/message";
+import Header from "@/src/components/header/header";
 
 export default function All() {
   const [data, setData] = useState<Refule[] | null>(null);
@@ -53,6 +54,20 @@ export default function All() {
     getRefuels();
   }, []);
 
+  const leftAction = (
+    <Link asChild href="../">
+      <Feather
+        name="chevron-left"
+        size={24}
+        style={{
+          color: color.text.primary,
+          padding: 12,
+          paddingLeft: 4,
+        }}
+      />
+    </Link>
+  );
+
   const Loading = () => (
     <View style={{ flex: 1, flexDirection: "column", gap: 32, paddingTop: 32 }}>
       <Skeleton style={style.skeleton} />
@@ -67,62 +82,41 @@ export default function All() {
   );
 
   return (
-    <ScrollView
-      style={[style.container, { paddingTop: insets.top }]}
-      contentContainerStyle={{ flex: 1 }}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={getRefuels} />
-      }
-    >
-      <View
-        style={{
-          flexDirection: "row",
-          gap: 4,
-          alignItems: "center",
-          paddingTop: 12,
-        }}
+    <>
+      <Header leftAction={leftAction} centerContent={t("title")} />
+      <ScrollView
+        style={[style.container, { paddingTop: insets.top }]}
+        contentContainerStyle={{ flex: 1 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={getRefuels} />
+        }
       >
-        <TouchableOpacity onPress={() => router.navigate("../")}>
-          <MaterialIcons
-            name="chevron-left"
-            size={24}
-            style={{
-              color: color.text.primary,
-              padding: 12,
-              paddingLeft: 4,
-            }}
-          />
-        </TouchableOpacity>
-        <Text style={style.title}>{t("title")}</Text>
-      </View>
-      {isLoading && <Loading />}
-      {!isLoading && data?.length === 0 && (
-        <Message title={t("noEntries")} description={t("noEntriesHint")} />
-      )}
-      {!isLoading && data && data.length > 0 && (
-        <View style={{ flex: 1, flexDirection: "column", paddingBottom: 144 }}>
-          <View style={style.list} key={21}>
-            {data.map((item, index) => (
-              <Item
-                item={item}
-                key={item.id}
-                last={index === data.length - 1}
-              />
-            ))}
+        {isLoading && <Loading />}
+        {!isLoading && data?.length === 0 && (
+          <Message title={t("noEntries")} description={t("noEntriesHint")} />
+        )}
+        {!isLoading && data && data.length > 0 && (
+          <View
+            style={{ flex: 1, flexDirection: "column", paddingBottom: 144 }}
+          >
+            <View style={style.list} key={21}>
+              {data.map((item, index) => (
+                <Item
+                  item={item}
+                  key={item.id}
+                  last={index === data.length - 1}
+                />
+              ))}
+            </View>
           </View>
-        </View>
-      )}
-    </ScrollView>
+        )}
+      </ScrollView>
+    </>
   );
 }
 
 const styling = (theme: Theme) =>
   StyleSheet.create({
-    title: {
-      color: theme.text.primary,
-      fontSize: 24,
-      fontWeight: 700,
-    },
     container: {
       backgroundColor: theme.bg.default,
       flex: 1,

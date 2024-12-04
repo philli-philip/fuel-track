@@ -1,4 +1,5 @@
 import Button from "@/src/components/button/button";
+import Header from "@/src/components/header/header";
 import { Skeleton } from "@/src/components/skeleton/skeleton";
 import { ThemeContext } from "@/src/utils/colors/colors";
 import { formatKM } from "@/src/utils/formatting/formatting";
@@ -124,28 +125,29 @@ const Page = () => {
     },
     button: {
       position: "absolute",
-      bottom: 24,
+      bottom: 32,
       right: 16,
     },
   });
 
+  const leftAction = (
+    <TouchableOpacity onPress={() => router.navigate("../")}>
+      <MaterialIcons
+        name="chevron-left"
+        size={24}
+        style={{
+          color: color.text.primary,
+          padding: 12,
+          borderRadius: 12,
+          backgroundColor: color.bg.input,
+        }}
+      />
+    </TouchableOpacity>
+  );
+
   return (
     <View style={{ flex: 1, backgroundColor: color.bg.default }}>
-      <View style={style.header}>
-        <TouchableOpacity onPress={() => router.navigate("../")}>
-          <MaterialIcons
-            name="chevron-left"
-            size={24}
-            style={{
-              color: color.text.primary,
-              padding: 12,
-              borderRadius: 12,
-              backgroundColor: color.bg.input,
-            }}
-          />
-        </TouchableOpacity>
-        <Text style={style.title}>{t("title")}</Text>
-      </View>
+      <Header leftAction={leftAction} centerContent={t("title")} />
       <View style={style.content}>
         {isLoading && <Loading />}
         {car && !isLoading && (

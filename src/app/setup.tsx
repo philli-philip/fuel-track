@@ -12,6 +12,7 @@ import { createCar } from "../actions/carActions";
 import Button from "../components/button/button";
 import { Theme, ThemeContext } from "../utils/colors/colors";
 import { useTranslation } from "react-i18next";
+import Header from "../components/header/header";
 
 export default function Setup() {
   const [carName, setCarName] = useState("");
@@ -59,20 +60,12 @@ export default function Setup() {
 
   return (
     <SafeAreaView style={s.container}>
+      <Header centerContent={t("title")} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1, flexGrow: 1, flexDirection: "column" }}
       >
         <View style={{ flex: 1 }}>
-          <View
-            style={{
-              padding: 16,
-              justifyContent: "center",
-              flexDirection: "row",
-            }}
-          >
-            <Text style={s.title}>{t("title")}</Text>
-          </View>
           <View style={s.form}>
             <View style={s.group}>
               <Text style={s.label}>{t("name")}</Text>
@@ -112,7 +105,7 @@ export default function Setup() {
             </View>
           </View>
           <Button
-            title="Create car"
+            title={t("create")}
             disabled={disabled}
             containerStyle={{ position: "absolute", bottom: 72, right: 24 }}
             onPress={() =>

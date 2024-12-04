@@ -15,6 +15,7 @@ import Button from "@/src/components/button/button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Skeleton } from "@/src/components/skeleton/skeleton";
 import { useTranslation } from "react-i18next";
+import { Message } from "@/src/components/message/message";
 
 const deleteEntry = async (id: number | string) => {
   const { error } = await supabase.from("entries").delete().eq("id", id);
@@ -159,7 +160,7 @@ export default function Page() {
             <Entry entry={entry} />
           </>
         ) : (
-          <Text>Not found</Text>
+          <Message title={t("notFound")} />
         )}
       </SafeAreaView>
       {entry && (
